@@ -1,5 +1,7 @@
 "use client";
 import { useState, useEffect, useRef } from 'react';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 type SearchBarProps = {
     /** Default location value */
@@ -160,22 +162,68 @@ const SearchBar = ({
 
             <div className="flex-1 relative px-4 py-2">
                 <div 
-                    className="relative cursor-pointer hover:bg-gray-50 px-4 py-2"
+                    className="relative"
                     onClick={() => {
-                        const dateInput = document.querySelector('input[type="date"]') as HTMLInputElement;
-                        dateInput?.showPicker();
-                        setIsDropdownOpen(false);
+                        const datePicker = document.querySelector('.react-datepicker-wrapper input') as HTMLInputElement;
+                        datePicker?.focus();
                     }}
                 >
-                    <input
-                        type="date"
-                        value={date}
-                        onChange={handleDateChange}
-                        className="absolute inset-0 w-full h-full opacity-0"
+                    <DatePicker
+                        selected={date ? new Date(date + 'T00:00:00') : null}
+                        onChange={(newDate) => {
+                            if (newDate) {
+                                const formattedDate = newDate.toISOString().split('T')[0];
+                                setDate(formattedDate);
+                                onDateChange?.(formattedDate);
+                            }
+                        }}
+                        dateFormat="MMM d"
+                        placeholderText="Select date"
+                        className="w-full px-4 py-2 text-left bg-white hover:bg-gray-50"
+                        calendarClassName="absolute z-10 mt-1 bg-white border rounded-lg shadow-lg"
+                        popperPlacement="bottom-start"
+                        onFocus={(e) => e.target.blur()}
+                        showMonthDropdown
+                        showYearDropdown
+                        dropdownMode="select"
+                        dayClassName={() => "w-8 h-8 flex items-center justify-center m-0.5 text-gray-700"}
+                        renderDayContents={(day) => (
+                            <div className="w-8 h-8 flex items-center justify-center">
+                                {day}
+                            </div>
+                        )}
+                        renderCustomHeader={({
+                            date,
+                            changeYear,
+                            changeMonth,
+                            decreaseMonth,
+                            increaseMonth,
+                            prevMonthButtonDisabled,
+                            nextMonthButtonDisabled,
+                        }) => (
+                            <div className="flex justify-between items-center px-2 py-2">
+                                <button
+                                    onClick={decreaseMonth}
+                                    disabled={prevMonthButtonDisabled}
+                                    type="button"
+                                    className="p-1"
+                                >
+                                    {"<"}
+                                </button>
+                                <span className="text-gray-900 font-medium">
+                                    {date.toLocaleString('default', { month: 'long', year: 'numeric' })}
+                                </span>
+                                <button
+                                    onClick={increaseMonth}
+                                    disabled={nextMonthButtonDisabled}
+                                    type="button"
+                                    className="p-1"
+                                >
+                                    {">"}
+                                </button>
+                            </div>
+                        )}
                     />
-                    <div>
-                        {displayDate || "Select date"}
-                    </div>
                 </div>
             </div>
 
