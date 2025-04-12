@@ -1,6 +1,5 @@
 "use client";
 import { useState, useEffect } from 'react';
-import { FaSearch, FaCalendar, FaClock } from 'react-icons/fa';
 
 type SearchBarProps = {
     /** Default location value */
@@ -9,6 +8,8 @@ type SearchBarProps = {
     defaultDate?: string;
     /** Default time value */
     defaultTime?: string;
+    /** List of available locations */
+    locations?: string[];
     /** Callback when location changes */
     onLocationChange?: (location: string) => void;
     /** Callback when date changes */
@@ -27,6 +28,7 @@ const SearchBar = ({
     defaultLocation = "",
     defaultDate = "",
     defaultTime = "",
+    locations = [],
     onLocationChange,
     onDateChange,
     onTimeChange,
@@ -36,6 +38,7 @@ const SearchBar = ({
     const [date, setDate] = useState(defaultDate);
     const [time, setTime] = useState(defaultTime);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const [displayDate, setDisplayDate] = useState("");
 
     // Update internal state when default values change
     useEffect(() => {
@@ -44,6 +47,11 @@ const SearchBar = ({
 
     useEffect(() => {
         setDate(defaultDate);
+        if (defaultDate) {
+            const dateObj = new Date(defaultDate);
+            const formattedDate = dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+            setDisplayDate(formattedDate);
+        }
     }, [defaultDate]);
 
     useEffect(() => {
@@ -59,6 +67,9 @@ const SearchBar = ({
     const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newDate = e.target.value;
         setDate(newDate);
+        const dateObj = new Date(newDate);
+        const formattedDate = dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        setDisplayDate(formattedDate);
         onDateChange?.(newDate);
     };
 
@@ -76,20 +87,20 @@ const SearchBar = ({
     return (
         <form 
             onSubmit={handleSubmit} 
-            className="flex flex-col md:flex-row bg-white rounded-lg shadow-lg max-w-4xl mx-auto border border-gray-200"
+            className="flex flex-col md:flex-row bg-white rounded-lg shadow-lg max-w-4xl mx-auto"
         >
             <div className="flex-1 relative p-4 md:border-r border-gray-200">
                 <div className="relative">
                     <button
                         type="button"
-                        className="w-full px-4 py-2 text-left bg-white border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-gray-50"
+                        className="w-full px-4 py-2 text-left bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-gray-50"
                         onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                     >
                         {location || "Select a city"}
                     </button>
                     {isDropdownOpen && (
                         <div className="absolute z-10 w-full mt-1 bg-white border rounded-lg shadow-lg">
-                            {["CDMX", "Guadalajara", "Monterrey", "Puebla", "Querétaro"].map((city) => (
+                            {locations.map((city) => (
                                 <div
                                     key={city}
                                     className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center"
@@ -107,34 +118,49 @@ const SearchBar = ({
             </div>
 
             <div className="flex-1 relative p-4 md:border-r border-gray-200">
-                <div className="absolute left-7 top-1/2 transform -translate-y-1/2 text-gray-400">
-                    <FaCalendar />
+                <div 
+                    className="relative cursor-pointer hover:bg-gray-50 px-4 py-2"
+                    onClick={() => {
+                        const dateInput = document.querySelector('input[type="date"]') as HTMLInputElement;
+                        dateInput?.showPicker();
+                    }}
+                >
+                    <input
+                        type="date"
+                        value={date}
+                        onChange={handleDateChange}
+                        className="absolute inset-0 w-full h-full opacity-0"
+                    />
+                    <div>
+                        {displayDate || "Select date"}
+                    </div>
                 </div>
-                <input
-                    type="date"
-                    value={date}
-                    onChange={handleDateChange}
-                    className="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
             </div>
 
             <div className="flex-1 relative p-4">
-                <div className="absolute left-7 top-1/2 transform -translate-y-1/2 text-gray-400">
-                    <FaClock />
+                <div 
+                    className="relative cursor-pointer hover:bg-gray-50 px-4 py-2"
+                    onClick={() => {
+                        const timeInput = document.querySelector('input[type="time"]') as HTMLInputElement;
+                        timeInput?.showPicker();
+                    }}
+                >
+                    <input
+                        type="time"
+                        value={time}
+                        onChange={handleTimeChange}
+                        className="absolute inset-0 w-full h-full opacity-0"
+                    />
+                    <div>
+                        {time || "Select time"}
+                    </div>
                 </div>
-                <input
-                    type="time"
-                    value={time}
-                    onChange={handleTimeChange}
-                    className="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
             </div>
 
             <button
                 type="submit"
-                className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition-colors flex items-center gap-2"
+                className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition-colors"
             >
-                <FaSearch />
                 Search
             </button>
         </form>
