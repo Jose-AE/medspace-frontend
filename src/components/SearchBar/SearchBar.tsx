@@ -172,7 +172,10 @@ const SearchBar = ({
                         selected={date ? new Date(date + 'T00:00:00') : null}
                         onChange={(newDate) => {
                             if (newDate) {
-                                const formattedDate = newDate.toISOString().split('T')[0];
+                                const year = newDate.getFullYear();
+                                const month = String(newDate.getMonth() + 1).padStart(2, '0');
+                                const day = String(newDate.getDate()).padStart(2, '0');
+                                const formattedDate = `${year}-${month}-${day}`;
                                 setDate(formattedDate);
                                 onDateChange?.(formattedDate);
                             }
