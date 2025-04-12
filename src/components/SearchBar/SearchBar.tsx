@@ -102,9 +102,9 @@ const SearchBar = ({
     return (
         <form 
             onSubmit={handleSubmit} 
-            className="flex flex-col md:flex-row bg-white rounded-lg shadow-lg max-w-4xl mx-auto"
+            className="flex flex-col md:flex-row bg-white rounded-full max-w-4xl mx-auto border border-gray-200 shadow-lg"
         >
-            <div className="flex-1 relative p-4 md:border-r border-gray-200" ref={dropdownRef}>
+            <div className="flex-1 relative px-4 py-2" ref={dropdownRef}>
                 <div className="relative">
                     <button
                         type="button"
@@ -132,7 +132,11 @@ const SearchBar = ({
                 </div>
             </div>
 
-            <div className="flex-1 relative p-4 md:border-r border-gray-200">
+            <div className="flex items-center">
+                <div className="h-8 w-px bg-gray-200"></div>
+            </div>
+
+            <div className="flex-1 relative px-4 py-2">
                 <div 
                     className="relative cursor-pointer hover:bg-gray-50 px-4 py-2"
                     onClick={() => {
@@ -153,7 +157,11 @@ const SearchBar = ({
                 </div>
             </div>
 
-            <div className="flex-1 relative p-4">
+            <div className="flex items-center">
+                <div className="h-8 w-px bg-gray-200"></div>
+            </div>
+
+            <div className="flex-1 relative px-4 py-2">
                 <div 
                     className="relative cursor-pointer hover:bg-gray-50 px-4 py-2"
                     onClick={() => {
@@ -176,7 +184,7 @@ const SearchBar = ({
 
             <button
                 type="submit"
-                className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition-colors"
+                className="bg-blue-500 text-white px-6 py-2 rounded-full hover:bg-blue-600 transition-colors"
             >
                 Search
             </button>
