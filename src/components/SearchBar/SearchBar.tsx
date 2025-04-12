@@ -40,6 +40,8 @@ const SearchBar = ({
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [displayDate, setDisplayDate] = useState("");
     const dropdownRef = useRef<HTMLDivElement>(null);
+    const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
+    const buttonRef = useRef<HTMLButtonElement>(null);
 
     // Handle click outside to close dropdown
     useEffect(() => {
@@ -72,6 +74,17 @@ const SearchBar = ({
     useEffect(() => {
         setTime(defaultTime);
     }, [defaultTime]);
+
+    // Update dropdown position when it opens
+    useEffect(() => {
+        if (isDropdownOpen && buttonRef.current) {
+            const rect = buttonRef.current.getBoundingClientRect();
+            setDropdownPosition({
+                top: rect.bottom + window.scrollY,
+                left: rect.left + window.scrollX
+            });
+        }
+    }, [isDropdownOpen]);
 
     const handleLocationChange = (newLocation: string) => {
         setLocation(newLocation);
@@ -108,25 +121,34 @@ const SearchBar = ({
                 <div className="relative">
                     <button
                         type="button"
+                        ref={buttonRef}
                         className="w-full px-4 py-2 text-left bg-white hover:bg-gray-50"
                         onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                     >
                         {location || "Select a city"}
                     </button>
                     {isDropdownOpen && (
-                        <div className="absolute z-10 w-full mt-1 bg-white border rounded-lg shadow-lg">
-                            {locations.map((city) => (
-                                <div
-                                    key={city}
-                                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center"
-                                    onClick={() => handleLocationChange(city)}
-                                >
-                                    <div className="w-4 h-4 border rounded-full mr-2 flex items-center justify-center">
-                                        {location === city && <div className="w-2 h-2 bg-blue-500 rounded-full" />}
+                        <div 
+                            className="fixed z-10 mt-1 bg-white border rounded-lg shadow-lg overflow-visible"
+                            style={{
+                                top: `${dropdownPosition.top}px`,
+                                left: `${dropdownPosition.left}px`
+                            }}
+                        >
+                            <div className="min-w-[200px]">
+                                {locations.map((city) => (
+                                    <div
+                                        key={city}
+                                        className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center"
+                                        onClick={() => handleLocationChange(city)}
+                                    >
+                                        <div className="w-4 h-4 border rounded-full mr-2 flex items-center justify-center">
+                                            {location === city && <div className="w-2 h-2 bg-blue-500 rounded-full" />}
+                                        </div>
+                                        {city}
                                     </div>
-                                    {city}
-                                </div>
-                            ))}
+                                ))}
+                            </div>
                         </div>
                     )}
                 </div>
