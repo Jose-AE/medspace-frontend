@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 type SearchBarProps = {
     /** Default location value */
@@ -39,6 +39,21 @@ const SearchBar = ({
     const [time, setTime] = useState(defaultTime);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [displayDate, setDisplayDate] = useState("");
+    const dropdownRef = useRef<HTMLDivElement>(null);
+
+    // Handle click outside to close dropdown
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+                setIsDropdownOpen(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
 
     // Update internal state when default values change
     useEffect(() => {
@@ -89,11 +104,11 @@ const SearchBar = ({
             onSubmit={handleSubmit} 
             className="flex flex-col md:flex-row bg-white rounded-lg shadow-lg max-w-4xl mx-auto"
         >
-            <div className="flex-1 relative p-4 md:border-r border-gray-200">
+            <div className="flex-1 relative p-4 md:border-r border-gray-200" ref={dropdownRef}>
                 <div className="relative">
                     <button
                         type="button"
-                        className="w-full px-4 py-2 text-left bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-gray-50"
+                        className="w-full px-4 py-2 text-left bg-white hover:bg-gray-50"
                         onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                     >
                         {location || "Select a city"}
@@ -123,6 +138,7 @@ const SearchBar = ({
                     onClick={() => {
                         const dateInput = document.querySelector('input[type="date"]') as HTMLInputElement;
                         dateInput?.showPicker();
+                        setIsDropdownOpen(false);
                     }}
                 >
                     <input
@@ -143,6 +159,7 @@ const SearchBar = ({
                     onClick={() => {
                         const timeInput = document.querySelector('input[type="time"]') as HTMLInputElement;
                         timeInput?.showPicker();
+                        setIsDropdownOpen(false);
                     }}
                 >
                     <input
