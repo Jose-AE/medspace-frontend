@@ -40,8 +40,10 @@ const SearchBar = ({
     const [date, setDate] = useState(defaultDate);
     const [time, setTime] = useState(defaultTime);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
     const [displayDate, setDisplayDate] = useState("");
     const dropdownRef = useRef<HTMLDivElement>(null);
+    const datePickerRef = useRef<any>(null);
     const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
     const buttonRef = useRef<HTMLButtonElement>(null);
 
@@ -169,23 +171,43 @@ const SearchBar = ({
                     }}
                 >
                     <DatePicker
-                        selected={date ? new Date(date + 'T00:00:00') : null}
+                        ref={datePickerRef}
+                        selected={date ? new Date(date) : null}
                         onChange={(newDate) => {
                             if (newDate) {
-                                const year = newDate.getFullYear();
-                                const month = String(newDate.getMonth() + 1).padStart(2, '0');
-                                const day = String(newDate.getDate()).padStart(2, '0');
-                                const formattedDate = `${year}-${month}-${day}`;
-                                setDate(formattedDate);
-                                onDateChange?.(formattedDate);
+                                // Adjust for timezone offset
+                                const offset = newDate.getTimezoneOffset();
+                                newDate.setMinutes(newDate.getMinutes() + offset);
+                                const localDate = newDate.toLocaleDateString('en-CA');
+                                setDate(localDate);
+                                onDateChange?.(localDate);
+                                // Close the date picker
+                                const datePicker = document.querySelector('.react-datepicker-wrapper input') as HTMLInputElement;
+                                datePicker?.blur();
+                                // Force close the calendar
+                                const calendar = document.querySelector('.react-datepicker-popper');
+                                if (calendar) {
+                                    calendar.setAttribute('style', 'display: none');
+                                }
+                                setIsDatePickerOpen(false);
                             }
                         }}
+                        onCalendarOpen={() => setIsDatePickerOpen(true)}
+                        onCalendarClose={() => setIsDatePickerOpen(false)}
                         dateFormat="MMM d"
                         placeholderText="Select date"
                         className="w-full px-4 py-2 text-left bg-white hover:bg-gray-50"
                         calendarClassName="absolute z-10 mt-1 bg-white border rounded-lg shadow-lg"
                         popperPlacement="bottom-start"
-                        onFocus={(e) => e.target.blur()}
+                        customInput={
+                            <input
+                                className={`w-full px-4 py-2 text-left bg-white ${!isDatePickerOpen ? 'hover:bg-gray-50' : ''} cursor-pointer focus:outline-none focus:ring-0`}
+                                style={{ 
+                                    caretColor: 'transparent',
+                                    border: isDatePickerOpen ? '1px solid #e5e7eb' : 'none'
+                                }}
+                            />
+                        }
                         showMonthDropdown
                         showYearDropdown
                         dropdownMode="select"
