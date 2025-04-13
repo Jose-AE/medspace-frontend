@@ -46,6 +46,12 @@ const SearchBar = ({
     const datePickerRef = useRef<any>(null);
     const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
     const buttonRef = useRef<HTMLButtonElement>(null);
+    const [isTimePickerOpen, setIsTimePickerOpen] = useState(false);
+    const timePickerRef = useRef<HTMLDivElement>(null);
+
+    // Derive selected hour and minute from time
+    const selectedHour = time ? time.split(':')[0] : '';
+    const selectedMinute = time ? time.split(':')[1] : '';
 
     // Handle click outside to close dropdown
     useEffect(() => {
@@ -105,16 +111,52 @@ const SearchBar = ({
         onDateChange?.(newDate);
     };
 
-    const handleTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const newTime = e.target.value;
-        setTime(newTime);
-        onTimeChange?.(newTime);
+    const handleTimeSelection = (hour: string, minute: string) => {
+        const formattedTime = `${hour.padStart(2, '0')}:${minute}`;
+        setTime(formattedTime);
+        onTimeChange?.(formattedTime);
+    };
+
+    const formatDisplayTime = (time: string) => {
+        if (!time) return "Select time";
+        const [hours, minutes] = time.split(':');
+        return `${hours}:${minutes}`;
     };
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         onSearch({ location, date, time });
     };
+
+    const generateTimeOptions = () => {
+        const options = [];
+        for (let hour = 0; hour < 24; hour++) {
+            for (let minute of [0, 30]) {
+                const period = hour >= 12 ? 'p.m.' : 'a.m.';
+                const displayHour = hour % 12 || 12;
+                const formattedTime = `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
+                const displayTime = `${displayHour}:${String(minute).padStart(2, '0')} ${period}`;
+                options.push({ value: formattedTime, display: displayTime });
+            }
+        }
+        return options;
+    };
+
+    const timeOptions = generateTimeOptions();
+
+    // Handle click outside to close time picker
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (timePickerRef.current && !timePickerRef.current.contains(event.target as Node)) {
+                setIsTimePickerOpen(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
 
     return (
         <form 
@@ -258,22 +300,73 @@ const SearchBar = ({
 
             <div className="flex-1 relative px-4 py-2">
                 <div 
-                    className="relative cursor-pointer hover:bg-gray-50 px-4 py-2"
-                    onClick={() => {
-                        const timeInput = document.querySelector('input[type="time"]') as HTMLInputElement;
-                        timeInput?.showPicker();
-                        setIsDropdownOpen(false);
-                    }}
+                    ref={timePickerRef}
+                    className="relative"
                 >
-                    <input
-                        type="time"
-                        value={time}
-                        onChange={handleTimeChange}
-                        className="absolute inset-0 w-full h-full opacity-0"
-                    />
-                    <div>
-                        {time || "Select time"}
+                    <div
+                        className="w-full px-4 py-2 text-left bg-white hover:bg-gray-50 cursor-pointer"
+                        onClick={() => {
+                            setIsTimePickerOpen(!isTimePickerOpen);
+                            if (timePickerRef.current) {
+                                const rect = timePickerRef.current.getBoundingClientRect();
+                                setDropdownPosition({
+                                    top: rect.bottom + window.scrollY,
+                                    left: rect.left + window.scrollX
+                                });
+                            }
+                        }}
+                    >
+                        {formatDisplayTime(time)}
                     </div>
+                    {isTimePickerOpen && (
+                        <div 
+                            className="fixed z-10 mt-1 bg-white border rounded-lg shadow-lg"
+                            style={{
+                                top: `${dropdownPosition.top}px`,
+                                left: `${dropdownPosition.left}px`
+                            }}
+                        >
+                            <div className="flex">
+                                {/* Hours Column */}
+                                <div className="w-16 border-r">
+                                    <div className="max-h-[200px] overflow-y-auto">
+                                        {Array.from({ length: 24 }, (_, i) => i).map((hour) => (
+                                            <div
+                                                key={hour}
+                                                className={`px-3 py-2 text-center cursor-pointer ${
+                                                    selectedHour === String(hour).padStart(2, '0') ? 'bg-blue-100' : 'hover:bg-gray-100'
+                                                }`}
+                                                onClick={() => {
+                                                    handleTimeSelection(String(hour).padStart(2, '0'), selectedMinute || '00');
+                                                }}
+                                            >
+                                                {String(hour).padStart(2, '0')}
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                {/* Minutes Column */}
+                                <div className="w-16">
+                                    <div className="max-h-[200px] overflow-y-auto">
+                                        {['00', '30'].map((minute) => (
+                                            <div
+                                                key={minute}
+                                                className={`px-3 py-2 text-center cursor-pointer ${
+                                                    selectedMinute === minute ? 'bg-blue-100' : 'hover:bg-gray-100'
+                                                }`}
+                                                onClick={() => {
+                                                    handleTimeSelection(selectedHour || '00', minute);
+                                                }}
+                                            >
+                                                {minute}
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
                 </div>
             </div>
 
