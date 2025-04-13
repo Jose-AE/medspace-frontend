@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { FaSearch } from 'react-icons/fa';
@@ -53,6 +53,7 @@ const SearchBar = ({
     const [isTimePickerOpen, setIsTimePickerOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
     const datePickerRef = useRef<any>(null);
+    const datePickerInputRef = useRef<HTMLInputElement>(null);
     const timePickerRef = useRef<HTMLDivElement>(null);
     const locationButtonRef = useRef<HTMLButtonElement>(null);
     const timeButtonRef = useRef<HTMLDivElement>(null);
@@ -106,12 +107,19 @@ const SearchBar = ({
     const formatDisplayTime = (time: string) => {
         if (!time) return "Select time";
         const [hours, minutes] = time.split(':');
-        return `${hours}:${minutes}`;
+        const hour = parseInt(hours);
+        const period = hour >= 12 ? 'p.m.' : 'a.m.';
+        const displayHour = hour % 12 || 12;
+        return `${displayHour}:${minutes} ${period}`;
     };
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        onSearch({ location, date, time });
+        onSearch({ 
+            location: location || '', 
+            date: date || '', 
+            time: time || '' 
+        });
     };
 
     // Get location dropdown position
@@ -119,8 +127,9 @@ const SearchBar = ({
         if (locationButtonRef.current) {
             const rect = locationButtonRef.current.getBoundingClientRect();
             return {
-                top: rect.bottom + window.scrollY,
-                left: rect.left + window.scrollX
+                top: '100%',
+                left: 0,
+                minWidth: rect.width
             };
         }
         return { top: 0, left: 0 };
@@ -131,12 +140,21 @@ const SearchBar = ({
         if (timeButtonRef.current) {
             const rect = timeButtonRef.current.getBoundingClientRect();
             return {
-                top: rect.bottom + window.scrollY,
-                left: rect.left + window.scrollX
+                top: '100%',
+                left: 0,
+                minWidth: rect.width
             };
         }
         return { top: 0, left: 0 };
     }, []);
+
+    // Handle keyboard navigation for time picker
+    const handleTimeKeyDown = (e: React.KeyboardEvent, hour: string, minute: string) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            handleTimeSelection(hour, minute);
+        }
+    };
 
     return (
         <form 
@@ -161,12 +179,12 @@ const SearchBar = ({
                     </button>
                     {isDropdownOpen && (
                         <div 
-                            className="fixed z-10 mt-1 bg-white border rounded-lg shadow-lg overflow-visible"
+                            className="absolute z-10 mt-1 bg-white border rounded-lg shadow-lg overflow-visible"
                             style={getLocationDropdownPosition()}
                             role="listbox"
                             aria-label="Available locations"
                         >
-                            <div className="min-w-[200px]">
+                            <div className="w-full">
                                 {locations.map((city) => (
                                     <div
                                         key={city}
@@ -193,25 +211,32 @@ const SearchBar = ({
                 <div 
                     className="relative"
                     onClick={() => {
-                        const datePicker = document.querySelector('.react-datepicker-wrapper input') as HTMLInputElement;
-                        datePicker?.focus();
+                        datePickerInputRef.current?.focus();
                     }}
                 >
                     <DatePicker
                         ref={datePickerRef}
-                        selected={date ? new Date(date) : null}
+                        selected={date ? new Date(date + 'T00:00:00') : null}
                         onChange={(newDate) => {
                             if (newDate) {
-                                const offset = newDate.getTimezoneOffset();
-                                newDate.setMinutes(newDate.getMinutes() + offset);
-                                const localDate = newDate.toLocaleDateString('en-CA');
-                                setDate(localDate);
-                                onDateChange?.(localDate);
-                                const datePicker = document.querySelector('.react-datepicker-wrapper input') as HTMLInputElement;
-                                datePicker?.blur();
-                                const calendar = document.querySelector('.react-datepicker-popper');
-                                if (calendar) {
-                                    calendar.setAttribute('style', 'display: none');
+                                try {
+                                    // Format the date as YYYY-MM-DD without timezone conversion
+                                    const year = newDate.getFullYear();
+                                    const month = String(newDate.getMonth() + 1).padStart(2, '0');
+                                    const day = String(newDate.getDate()).padStart(2, '0');
+                                    const formattedDate = `${year}-${month}-${day}`;
+                                    
+                                    setDate(formattedDate);
+                                    onDateChange?.(formattedDate);
+                                    
+                                    datePickerInputRef.current?.blur();
+                                    const calendar = document.querySelector('.react-datepicker-popper');
+                                    if (calendar) {
+                                        calendar.setAttribute('style', 'display: none');
+                                    }
+                                } catch (error) {
+                                    // Reset to previous date if there's an error
+                                    setDate(date);
                                 }
                             }
                         }}
@@ -222,6 +247,7 @@ const SearchBar = ({
                         popperPlacement="bottom-start"
                         customInput={
                             <input
+                                ref={datePickerInputRef}
                                 className="w-full px-4 py-2 text-left bg-white hover:bg-gray-50 cursor-pointer focus:outline-none focus:ring-0"
                                 style={{ caretColor: 'transparent' }}
                             />
@@ -283,17 +309,23 @@ const SearchBar = ({
                         onClick={() => {
                             setIsTimePickerOpen(!isTimePickerOpen);
                         }}
+                        role="button"
+                        aria-expanded={isTimePickerOpen}
+                        aria-haspopup="listbox"
+                        aria-label="Select time"
                     >
                         {formatDisplayTime(time)}
                     </div>
                     {isTimePickerOpen && (
                         <div 
-                            className="fixed z-10 mt-1 bg-white border rounded-lg shadow-lg"
+                            className="absolute z-10 mt-1 bg-white border rounded-lg shadow-lg"
                             style={getTimePickerPosition()}
+                            role="listbox"
+                            aria-label="Available times"
                         >
-                            <div className="flex">
+                            <div className="flex w-full">
                                 {/* Hours Column */}
-                                <div className="w-16 border-r">
+                                <div className="w-1/2 border-r">
                                     <div className="max-h-[200px] overflow-y-auto">
                                         {Array.from({ length: 24 }, (_, i) => i).map((hour) => (
                                             <div
@@ -304,6 +336,10 @@ const SearchBar = ({
                                                 onClick={() => {
                                                     handleTimeSelection(String(hour).padStart(2, '0'), selectedMinute || '00');
                                                 }}
+                                                onKeyDown={(e) => handleTimeKeyDown(e, String(hour).padStart(2, '0'), selectedMinute || '00')}
+                                                role="option"
+                                                aria-selected={selectedHour === String(hour).padStart(2, '0')}
+                                                tabIndex={0}
                                             >
                                                 {String(hour).padStart(2, '0')}
                                             </div>
@@ -312,7 +348,7 @@ const SearchBar = ({
                                 </div>
 
                                 {/* Minutes Column */}
-                                <div className="w-16">
+                                <div className="w-1/2">
                                     <div className="max-h-[200px] overflow-y-auto">
                                         {['00', '30'].map((minute) => (
                                             <div
@@ -323,6 +359,10 @@ const SearchBar = ({
                                                 onClick={() => {
                                                     handleTimeSelection(selectedHour || '00', minute);
                                                 }}
+                                                onKeyDown={(e) => handleTimeKeyDown(e, selectedHour || '00', minute)}
+                                                role="option"
+                                                aria-selected={selectedMinute === minute}
+                                                tabIndex={0}
                                             >
                                                 {minute}
                                             </div>
