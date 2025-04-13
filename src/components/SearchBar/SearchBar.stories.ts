@@ -10,6 +10,18 @@
 import { Meta, StoryObj } from "@storybook/react";
 import SearchBar from "./SearchBar";
 
+// Example cities for the stories
+const exampleCities = [
+  "CDMX",
+  "Monterrey",
+  "Guadalajara",
+  "Puebla",
+  "Tijuana",
+  "Mérida",
+  "Cancún",
+  "Querétaro"
+];
+
 /**
  * Meta configuration for the SearchBar stories
  * 
@@ -21,7 +33,7 @@ const meta: Meta<typeof SearchBar> = {
   tags: ['autodocs'],
   parameters: {
     componentSubtitle: 'A search component for finding medical appointments',
-    layout: 'centered',
+    layout: 'padded',
     viewport: {
       defaultViewport: 'responsive',
     },
@@ -36,6 +48,7 @@ const meta: Meta<typeof SearchBar> = {
       source: { type: 'dynamic' },
       canvas: {
         sourceState: 'shown',
+        layout: 'padded'
       },
       story: {
         inline: true,
@@ -58,7 +71,10 @@ const meta: Meta<typeof SearchBar> = {
     },
     locations: {
       description: 'List of available locations to choose from',
-      control: 'object',
+      control: { type: 'object' },
+      table: {
+        type: { summary: 'string[]' }
+      }
     },
     onLocationChange: {
       description: 'Callback when location selection changes',
@@ -76,39 +92,19 @@ const meta: Meta<typeof SearchBar> = {
       description: 'Callback when search is triggered with all parameters',
       action: 'search triggered',
     },
-    isLoading: {
-      description: 'Whether the component is in a loading state',
-      control: 'boolean',
-    },
-    isDisabled: {
-      description: 'Whether the component is disabled',
-      control: 'boolean',
-    },
   },
 };
 
 export default meta;
 type Story = StoryObj<typeof SearchBar>;
 
-// Example cities for the stories
-const exampleCities = [
-  "CDMX",
-  "Monterrey",
-  "Guadalajara",
-  "Puebla",
-  "Tijuana",
-  "Mérida",
-  "Cancún",
-  "Querétaro"
-];
-
 /**
- * Default story for the SearchBar
+ * Mobile layout story for the SearchBar
  * 
- * This story demonstrates the default state of the SearchBar with all props provided.
- * It shows a complete search interface with location, date, and time selection.
+ * This story demonstrates how the SearchBar responds to mobile viewport sizes,
+ * showing its responsive design capabilities.
  */
-export const Default: Story = {
+export const Mobile: Story = {
   args: {
     locations: exampleCities,
     defaultLocation: "CDMX",
@@ -128,60 +124,33 @@ export const Default: Story = {
     },
   },
   parameters: {
+    viewport: {
+      defaultViewport: 'mobile1'
+    },
     docs: {
       story: {
         inline: true,
         iframeHeight: 500,
       },
+      description: {
+        story: 'Demonstrates the SearchBar layout on mobile devices, where elements stack vertically.'
+      }
     },
   },
 };
 
 /**
- * Empty state story for the SearchBar
+ * Desktop layout story for the SearchBar
  * 
- * This story demonstrates the SearchBar with no default values.
+ * This story demonstrates how the SearchBar appears on desktop viewport sizes,
+ * showing its horizontal layout and full functionality.
  */
-export const Empty: Story = {
+export const Desktop: Story = {
   args: {
     locations: exampleCities,
-    defaultLocation: "",
-    defaultDate: "",
-    defaultTime: "",
-    onLocationChange: (location) => {
-      console.log('Location changed:', location);
-    },
-    onDateChange: (date) => {
-      console.log('Date changed:', date);
-    },
-    onTimeChange: (time) => {
-      console.log('Time changed:', time);
-    },
-    onSearch: (params) => {
-      alert(`Searching for appointments in ${params.location} on ${params.date} at ${params.time}`);
-    },
-  },
-  parameters: {
-    docs: {
-      story: {
-        inline: true,
-        iframeHeight: 500,
-      },
-    },
-  },
-};
-
-/**
- * Custom locations story for the SearchBar
- * 
- * This story demonstrates the SearchBar with a custom set of locations.
- */
-export const CustomLocations: Story = {
-  args: {
-    locations: ["New York", "Los Angeles", "Chicago", "Miami"],
-    defaultLocation: "New York",
+    defaultLocation: "CDMX",
     defaultDate: new Date().toISOString().split('T')[0],
-    defaultTime: "09:00",
+    defaultTime: "12:00",
     onLocationChange: (location) => {
       console.log('Location changed:', location);
     },
@@ -196,11 +165,17 @@ export const CustomLocations: Story = {
     },
   },
   parameters: {
+    viewport: {
+      defaultViewport: 'desktop'
+    },
     docs: {
       story: {
         inline: true,
-        iframeHeight: 500,
+        iframeHeight: 200
       },
+      description: {
+        story: 'Demonstrates the SearchBar layout on desktop devices, where elements are arranged horizontally.'
+      }
     },
   },
 };

@@ -159,7 +159,7 @@ const SearchBar = ({
     return (
         <form 
             onSubmit={handleSubmit} 
-            className="flex flex-col md:flex-row bg-white rounded-full max-w-4xl mx-auto border border-gray-200 shadow-lg"
+            className="flex flex-col md:flex-row bg-white rounded-lg md:rounded-full w-full border border-gray-200 shadow-lg"
             role="search"
             aria-label="Search for medical appointments"
         >
@@ -168,7 +168,7 @@ const SearchBar = ({
                     <button
                         type="button"
                         ref={locationButtonRef}
-                        className="w-full px-4 py-2 text-left bg-white hover:bg-gray-50"
+                        className="w-full px-4 py-2 text-center bg-white hover:bg-gray-50 truncate rounded-lg md:rounded-none"
                         onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                         aria-expanded={isDropdownOpen}
                         aria-haspopup="listbox"
@@ -179,7 +179,7 @@ const SearchBar = ({
                     </button>
                     {isDropdownOpen && (
                         <div 
-                            className="absolute z-10 mt-1 bg-white border rounded-lg shadow-lg overflow-visible"
+                            className="absolute z-10 mt-1 bg-white border rounded-lg shadow-lg overflow-visible w-full"
                             style={getLocationDropdownPosition()}
                             role="listbox"
                             aria-label="Available locations"
@@ -188,13 +188,13 @@ const SearchBar = ({
                                 {locations.map((city) => (
                                     <div
                                         key={city}
-                                        className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center"
+                                        className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center truncate"
                                         onClick={() => handleLocationChange(city)}
                                     >
-                                        <div className="w-4 h-4 border rounded-full mr-2 flex items-center justify-center">
+                                        <div className="w-4 h-4 border rounded-full mr-2 flex items-center justify-center flex-shrink-0">
                                             {location === city && <div className="w-2 h-2 bg-blue-500 rounded-full" />}
                                         </div>
-                                        {city}
+                                        <span className="truncate">{city}</span>
                                     </div>
                                 ))}
                             </div>
@@ -203,8 +203,8 @@ const SearchBar = ({
                 </div>
             </div>
 
-            <div className="flex items-center">
-                <div className="h-8 w-px bg-gray-200"></div>
+            <div className="flex items-center justify-center md:block md:py-2">
+                <div className="h-px w-full md:h-8 md:w-px bg-gray-200 md:mx-2"></div>
             </div>
 
             <div className="flex-1 relative px-4 py-2">
@@ -220,7 +220,6 @@ const SearchBar = ({
                         onChange={(newDate) => {
                             if (newDate) {
                                 try {
-                                    // Format the date as YYYY-MM-DD without timezone conversion
                                     const year = newDate.getFullYear();
                                     const month = String(newDate.getMonth() + 1).padStart(2, '0');
                                     const day = String(newDate.getDate()).padStart(2, '0');
@@ -235,67 +234,31 @@ const SearchBar = ({
                                         calendar.setAttribute('style', 'display: none');
                                     }
                                 } catch (error) {
-                                    // Reset to previous date if there's an error
                                     setDate(date);
                                 }
                             }
                         }}
                         dateFormat="MMM d"
                         placeholderText="Select date"
-                        className="w-full px-4 py-2 text-left bg-white hover:bg-gray-50"
                         calendarClassName="absolute z-10 mt-1 bg-white border rounded-lg shadow-lg"
                         popperPlacement="bottom-start"
+                        showPopperArrow={false}
+                        wrapperClassName="w-full"
                         customInput={
-                            <input
-                                ref={datePickerInputRef}
-                                className="w-full px-4 py-2 text-left bg-white hover:bg-gray-50 cursor-pointer focus:outline-none focus:ring-0"
-                                style={{ caretColor: 'transparent' }}
-                            />
+                            <button
+                                type="button"
+                                ref={datePickerInputRef as any}
+                                className="w-full py-2 flex items-center justify-center bg-white hover:bg-gray-50 cursor-pointer focus:outline-none focus:ring-0 truncate rounded-lg md:rounded-none"
+                            >
+                                {date ? new Date(date + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : "Select date"}
+                            </button>
                         }
-                        showMonthDropdown
-                        showYearDropdown
-                        dropdownMode="select"
-                        dayClassName={() => "w-8 h-8 flex items-center justify-center m-0.5 text-gray-700"}
-                        renderDayContents={(day) => (
-                            <div className="w-8 h-8 flex items-center justify-center">
-                                {day}
-                            </div>
-                        )}
-                        renderCustomHeader={({
-                            date,
-                            decreaseMonth,
-                            increaseMonth,
-                            prevMonthButtonDisabled,
-                            nextMonthButtonDisabled,
-                        }) => (
-                            <div className="flex justify-between items-center px-2 py-2">
-                                <button
-                                    onClick={decreaseMonth}
-                                    disabled={prevMonthButtonDisabled}
-                                    type="button"
-                                    className="p-1"
-                                >
-                                    {"<"}
-                                </button>
-                                <span className="text-gray-900 font-medium">
-                                    {date.toLocaleString('default', { month: 'long', year: 'numeric' })}
-                                </span>
-                                <button
-                                    onClick={increaseMonth}
-                                    disabled={nextMonthButtonDisabled}
-                                    type="button"
-                                    className="p-1"
-                                >
-                                    {">"}
-                                </button>
-                            </div>
-                        )}
                     />
                 </div>
             </div>
 
-            <div className="flex items-center">
-                <div className="h-8 w-px bg-gray-200"></div>
+            <div className="flex items-center justify-center md:block md:py-2">
+                <div className="h-px w-full md:h-8 md:w-px bg-gray-200 md:mx-2"></div>
             </div>
 
             <div className="flex-1 relative px-4 py-2">
@@ -305,7 +268,7 @@ const SearchBar = ({
                 >
                     <div
                         ref={timeButtonRef}
-                        className="w-full px-4 py-2 text-left bg-white hover:bg-gray-50 cursor-pointer"
+                        className="w-full px-4 py-2 text-center bg-white hover:bg-gray-50 cursor-pointer truncate rounded-lg md:rounded-none"
                         onClick={() => {
                             setIsTimePickerOpen(!isTimePickerOpen);
                         }}
@@ -318,7 +281,7 @@ const SearchBar = ({
                     </div>
                     {isTimePickerOpen && (
                         <div 
-                            className="absolute z-10 mt-1 bg-white border rounded-lg shadow-lg"
+                            className="absolute z-10 mt-1 bg-white border rounded-lg shadow-lg w-full"
                             style={getTimePickerPosition()}
                             role="listbox"
                             aria-label="Available times"
@@ -375,10 +338,10 @@ const SearchBar = ({
                 </div>
             </div>
 
-            <div className="flex items-center pr-1">
+            <div className="flex items-center justify-center p-2 md:p-1">
                 <button
                     type="submit"
-                    className={`bg-blue-500 text-white p-3 rounded-full transition-colors flex items-center justify-center w-10 h-10 ${
+                    className={`bg-blue-500 text-white p-3 rounded-full transition-colors flex items-center justify-center w-10 h-10 flex-shrink-0 ${
                         isLoading || isDisabled ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-600'
                     }`}
                     disabled={isLoading || isDisabled}
