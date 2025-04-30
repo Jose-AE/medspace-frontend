@@ -28,7 +28,7 @@ const navbarLinks = {
     { name: "Notifications", href: "/notifications" }
   ],
   analyst: [
-    { name: "Metrics", href: "/metrics" },
+    { name: "Metrics", href: "/main/analyst/metrics" },
     { name: "Notifications", href: "/notifications" }
   ],
   guest: [

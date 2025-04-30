@@ -182,5 +182,5 @@ export default function CDMXHeatmap({ data }: HeatmapProps) {
     };
   }, [data]);
 
-  return <div ref={mapContainer} className=" h-[300px] w-full border border-gray-300 rounded-lg" />;
+  return <div ref={mapContainer} className="w-full h-full min-h-[300px] border border-gray-300 rounded-lg" />;
 }
