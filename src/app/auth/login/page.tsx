@@ -4,11 +4,13 @@ import Link from "next/link";
 import Button from "@/components/Button";
 import TextInput from "@/components/TextInput";
 import { AuthService } from "@/services/AuthService";
+import { FirebaseError } from "firebase/app";
+import toast from "react-hot-toast";
 
 export default function LoginPage() {
   // State hooks to manage email and password values
-  const [email, setEmail] = useState("test@gmail.com");
-  const [password, setPassword] = useState("123456");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   // Handle form submission
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -17,8 +19,19 @@ export default function LoginPage() {
       await AuthService.signInWithEmailAndPassword(email, password);
 
       window.location.href = "/main";
-    } catch {
-      console.log("invalid credentials");
+    } catch (error) {
+      if (error instanceof FirebaseError) {
+        // Handle specific Firebase error codes here
+        switch (error.code) {
+          case "auth/invalid-credential":
+            toast.error("Invalid credentials. Please try again.");
+            break;
+          default:
+            toast.error(error.message || "Firebase error occurred.");
+        }
+      } else {
+        toast.error("Error logging in. Please try again.");
+      }
     }
   }
 

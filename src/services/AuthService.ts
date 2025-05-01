@@ -1,4 +1,3 @@
-import { auth } from "@/lib/firebase/clientApp";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -7,20 +6,11 @@ import {
 } from "firebase/auth";
 import { setCookie, deleteCookie } from "cookies-next";
 import { UserService } from "./UserService";
+import { UserRegistrationData } from "@/types/userTypes";
+import { auth } from "@/lib/firebase/clientApp";
 
 export class AuthService {
-  /**
-   * Sets or removes the session cookie for the user.
-   *
-   * This method is used to manage the session cookie (`__session`)
-   * which allows server components to read and identify the user.
-   * If a user is provided, their ID token is retrieved and stored
-   * in the session cookie. If no user is provided, the session
-   * cookie is deleted.
-   *
-   * @param user - The user object containing authentication details,
-   *               or `null` to remove the session cookie.
-   */
+  //
   private static async setSessionCookie(user: FirebaseUser | null) {
     if (user) {
       const idToken = await user.getIdToken();
@@ -42,35 +32,87 @@ export class AuthService {
     return !auth.currentUser;
   }
 
-  static async signInWithEmailAndPassword(email: string, password: string) {
-    this.checkIfClientSide();
+  // Register a new user with email and password
+  static async registerUserWithEmailAndPassword(
+    email: string,
+    password: string,
+    userData: UserRegistrationData
+  ): Promise<void> {
+    let userCredential;
 
     try {
-      const res = await signInWithEmailAndPassword(auth, email, password);
-      await this.setSessionCookie(res.user);
-      return res;
-    } catch (error) {
-      console.error("Error signing in:", error);
-      throw error; // Optionally, rethrow or return a custom error message
-    }
-  }
+      userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
 
-  static async createUserWithEmailAndPassword(email: string, password: string) {
-    this.checkIfClientSide();
+      await UserService.createUserProfile(userData);
 
-    try {
-      const res = await createUserWithEmailAndPassword(auth, email, password);
-      await this.setSessionCookie(res.user);
-      return res;
+      await this.setSessionCookie(userCredential.user);
     } catch (error) {
-      console.error("Error creating user", error);
+      console.error("[AuthService]: Error creating user", error);
+
+      // Rollback: delete Firebase user if DB user creation fails
+      if (userCredential?.user) {
+        try {
+          await userCredential.user.delete();
+        } catch (deleteError) {
+          console.error(
+            "[AuthService]: Failed to rollback Firebase user",
+            deleteError
+          );
+        }
+      }
+
       throw error;
     }
   }
 
-  static async signOut() {
-    this.checkIfClientSide();
+  // Sign in with email and password
+  static async signInWithEmailAndPassword(
+    email: string,
+    password: string
+  ): Promise<void> {
+    try {
+      const res = await signInWithEmailAndPassword(auth, email, password);
+      await this.setSessionCookie(res.user);
+    } catch (error) {
+      console.error("[AuthService] Error signing in:", error);
+      throw error; // Optionally, rethrow or return a custom error message
+    }
+  }
 
+  // Get Firebase auth token for API calls to custom backend
+  static async getIdToken(): Promise<string> {
+    try {
+      const user = auth.currentUser;
+      if (!user) throw new Error("No authenticated user");
+
+      return await user.getIdToken();
+    } catch (error) {
+      console.error("Get token error:", error);
+      throw error;
+    }
+  }
+
+  // Get auth headers for API requests (includes Firebase token)
+  static async getAuthHeaders(
+    contentType: string = "application/json"
+  ): Promise<Record<string, string>> {
+    try {
+      const token = await this.getIdToken();
+      return {
+        "Content-Type": contentType,
+        Authorization: `Bearer ${token}`
+      };
+    } catch (error) {
+      console.error("Get auth headers error:", error);
+      return { "Content-Type": contentType };
+    }
+  }
+
+  static async signOut() {
     try {
       await signOut(auth);
       await this.setSessionCookie(null);
@@ -86,9 +128,7 @@ export class AuthService {
     if (!user) return null;
 
     // Now calling UserService to get user data
-    const data = await UserService.getSelfUserDataFromDatabase(
-      await user.getIdToken()
-    );
+    const data = await UserService.getSelf(await user.getIdToken());
     return data;
   }
 }
