@@ -39,9 +39,7 @@ export async function getCurrentUserServerSide() {
   if (!user) return null;
 
   // Now calling UserService to get user data
-  const data = await UserService.getSelfUserDataFromDatabase(
-    await user.getIdToken()
-  );
+  const data = await UserService.getSelf(await user.getIdToken());
 
   return data;
 }

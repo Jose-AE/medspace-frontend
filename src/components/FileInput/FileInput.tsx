@@ -18,7 +18,7 @@ const FileInput = ({
   /** File type accepted */
   accept = "application/pdf",
   /** Placeholder when file is null */
-  placeholder = "Select a file",
+  placeholder = "Select a file"
 }: FileInputProps) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [fileName, setFileName] = useState<string>("");

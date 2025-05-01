@@ -24,3 +24,16 @@ export type UserCompact = Pick<
   User,
   "id" | "fullName" | "email" | "profilePhotoUrl" | "userType"
 >;
+
+export interface UserRegistrationData {
+  fullName: string;
+  email: string;
+  password: string;
+  phoneNumber: string;
+  pfp: File;
+  userType: UserType;
+  officialId: File;
+  tenantProfessionalLicense?: File;
+  tenantProfessionalLicenseNumber?: string;
+  tenantSpecialtyId?: number;
+}
