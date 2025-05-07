@@ -5,22 +5,28 @@ import { useEffect, useRef } from 'react';
 import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 
+interface MapCenter {
+  lat: number;
+  lng: number;
+  zoom: number;
+}
+
 interface HeatmapProps {
   data: Array<{
     lat: number;
     lng: number;
     intensity?: number;
   }>;
+  center?: MapCenter;
 }
 
-export default function CDMXHeatmap({ data }: HeatmapProps) {
+export default function CDMXHeatmap({ data, center }: HeatmapProps) {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<maplibregl.Map | null>(null);
 
   useEffect(() => {
     if (!mapContainer.current) return;
     if (map.current) return;
-
 
     map.current = new maplibregl.Map({
       container: mapContainer.current,
@@ -47,8 +53,8 @@ export default function CDMXHeatmap({ data }: HeatmapProps) {
           }
         ]
       },
-      center: [-99.1332, 19.4326],
-      zoom: 10,
+      center: center ? [center.lng, center.lat] : [-99.1332, 19.4326],
+      zoom: center?.zoom || 10,
     });
 
     map.current.on('load', () => {
@@ -180,7 +186,18 @@ export default function CDMXHeatmap({ data }: HeatmapProps) {
         map.current = null;
       }
     };
-  }, [data]);
+  }, [data, center]);
+
+  // Add effect to handle center changes
+  useEffect(() => {
+    if (!map.current || !center) return;
+    
+    map.current.flyTo({
+      center: [center.lng, center.lat],
+      zoom: center.zoom,
+      duration: 1000
+    });
+  }, [center]);
 
   return <div ref={mapContainer} className="w-full h-full min-h-[300px] border border-gray-300 rounded-lg" />;
 }
