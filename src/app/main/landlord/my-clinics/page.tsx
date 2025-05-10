@@ -8,6 +8,9 @@ import { ClinicService } from "@/services/ClinicService";
 export default async function page() {
   const clinics = await ClinicService.getMyClinics();
 
+
+  await new Promise(resolve => setTimeout(resolve, 10000));
+
   return (
     <div className="flex flex-col gap-4 p-8">
       <div className="flex flex-row items-center">
