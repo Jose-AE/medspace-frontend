@@ -55,7 +55,9 @@ export class UserService {
       });
 
       const userData = response.data.data as User;
-      userData.createdAt = new Date(userData.createdAt);
+
+      if (userData.createdAt)
+        userData.createdAt = new Date(userData.createdAt);
 
       return userData;
     } catch (error) {

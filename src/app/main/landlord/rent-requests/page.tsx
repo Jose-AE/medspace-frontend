@@ -1,9 +1,9 @@
 "use client";
 
-import LandlordRequestItem from "@/components/LandlordRequestItem";
 import { useRentRequests } from "@/hooks/useRentRequests";
 import { RentRequestPreview } from "@/types/rentRequestTypes";
 import { FaSpinner } from "react-icons/fa";
+import LandlordRequestItem from "./components/LandlordRequestItem";
 
 export default function RentRequestsPage() {
   const { rentRequests, loading } = useRentRequests();

@@ -1,22 +1,24 @@
 "use client";
 
-import ClinicCard from "@/components/ClinicCard";
 import React, { useEffect, useState } from "react";
 import ClinicsMap from "./components/ClinicsMap";
 import { ClinicService } from "@/services/ClinicService";
-import { Clinic } from "@/types/clinicTypes";
+import { Clinic, ClinicEquipmentType } from "@/types/clinicTypes";
 import { constToTitleCase } from "@/lib/textUtils";
 import ClinicFilterBar from "./components/ClinicFilterBar";
+import { useAuth } from "@/hooks/useAuth";
+import ClinicCard from "./components/ClinicCard";
 
 interface SearchParams {
   location: string;
   date: Date | undefined;
   time: string;
-  equipment: string[];
+  equipment: ClinicEquipmentType[];
   showSaved: boolean;
 }
 
 export default function Page() {
+  const { authInitialized } = useAuth();
   const [clinics, setClinics] = useState<Clinic[]>([]);
   const [isloading, setIsLoading] = useState(false);
   const [searchParams, setSearchParams] = useState<SearchParams>({
@@ -28,6 +30,8 @@ export default function Page() {
   });
 
   useEffect(() => {
+    if (!authInitialized) return; // Wait for auth state to be initialized so we can fetch clinics with user token
+
     setIsLoading(true);
     ClinicService.getClinics({
       includePhotos: true,
@@ -35,8 +39,8 @@ export default function Page() {
       includeAvailabilities: true,
       targetDate: searchParams.date,
       equipmentList: searchParams.equipment,
-      targetHour: searchParams.time,
-      targetCity: searchParams.location
+      targetCity: searchParams.location,
+      targetHour: searchParams.time
     })
       .then((data) => {
         setClinics(data);
@@ -47,11 +51,9 @@ export default function Page() {
       .finally(() => {
         setIsLoading(false);
       });
-  }, [searchParams]);
+  }, [searchParams, authInitialized]);
 
   async function handleSearch(searchParams: SearchParams) {
-    console.log("Search Params:", searchParams);
-
     setSearchParams(searchParams);
   }
 

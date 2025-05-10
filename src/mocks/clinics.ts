@@ -46,14 +46,14 @@ export const MOCK_CLINICS: Clinic[] = [
       }
     ],
     equipments: [
-      { id: 1, clinicId: 1, quantity: 2, equipmentType: "X_RAY" },
-      { id: 2, clinicId: 1, quantity: 1, equipmentType: "LABORATORY" },
-      { id: 3, clinicId: 1, quantity: 1, equipmentType: "PHARMACY" },
-      { id: 4, clinicId: 1, quantity: 1, equipmentType: "SURGICAL_THEATER" },
-      { id: 5, clinicId: 1, quantity: 1, equipmentType: "REHABILITATION" },
-      { id: 6, clinicId: 1, quantity: 1, equipmentType: "CT_SCAN" },
-      { id: 7, clinicId: 1, quantity: 1, equipmentType: "MRI" },
-      { id: 8, clinicId: 1, quantity: 1, equipmentType: "ULTRASOUND" }
+      { id: 1, clinicId: 1, quantity: 2, type: "X_RAY" },
+      { id: 2, clinicId: 1, quantity: 1, type: "LABORATORY" },
+      { id: 3, clinicId: 1, quantity: 1, type: "PHARMACY" },
+      { id: 4, clinicId: 1, quantity: 1, type: "SURGICAL_THEATER" },
+      { id: 5, clinicId: 1, quantity: 1, type: "REHABILITATION" },
+      { id: 6, clinicId: 1, quantity: 1, type: "CT_SCAN" },
+      { id: 7, clinicId: 1, quantity: 1, type: "MRI" },
+      { id: 8, clinicId: 1, quantity: 1, type: "ULTRASOUND" }
     ],
     availabilities: [
       {
@@ -99,8 +99,8 @@ export const MOCK_CLINICS: Clinic[] = [
       }
     ],
     equipments: [
-      { id: 3, clinicId: 2, quantity: 3, equipmentType: "X_RAY" },
-      { id: 4, clinicId: 2, quantity: 1, equipmentType: "PHARMACY" }
+      { id: 3, clinicId: 2, quantity: 3, type: "X_RAY" },
+      { id: 4, clinicId: 2, quantity: 1, type: "PHARMACY" }
     ],
     availabilities: [
       {
@@ -146,8 +146,8 @@ export const MOCK_CLINICS: Clinic[] = [
       }
     ],
     equipments: [
-      { id: 5, clinicId: 3, quantity: 1, equipmentType: "ULTRASOUND" },
-      { id: 6, clinicId: 3, quantity: 1, equipmentType: "LABORATORY" }
+      { id: 5, clinicId: 3, quantity: 1, type: "ULTRASOUND" },
+      { id: 6, clinicId: 3, quantity: 1, type: "LABORATORY" }
     ],
     availabilities: [
       {
@@ -192,9 +192,7 @@ export const MOCK_CLINICS: Clinic[] = [
         isPrimary: true
       }
     ],
-    equipments: [
-      { id: 7, clinicId: 4, quantity: 1, equipmentType: "REHABILITATION" }
-    ],
+    equipments: [{ id: 7, clinicId: 4, quantity: 1, type: "REHABILITATION" }],
     availabilities: [
       {
         id: 7,
@@ -238,9 +236,7 @@ export const MOCK_CLINICS: Clinic[] = [
         isPrimary: true
       }
     ],
-    equipments: [
-      { id: 8, clinicId: 5, quantity: 2, equipmentType: "LABORATORY" }
-    ],
+    equipments: [{ id: 8, clinicId: 5, quantity: 2, type: "LABORATORY" }],
     availabilities: [
       {
         id: 9,

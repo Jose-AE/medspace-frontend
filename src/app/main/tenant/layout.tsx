@@ -4,7 +4,7 @@ import Navbar from "@/components/Navbar";
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <AuthGuard allowedUserTypes={["TENANT"]} redirectPath="/main">
-      <Navbar variant="tenant" />
+      <Navbar />
       {children}
     </AuthGuard>
   );

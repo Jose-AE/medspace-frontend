@@ -4,7 +4,7 @@ import AuthGuard from "@/components/AuthGuard";
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <AuthGuard allowedUserTypes={["ANALYST"]} redirectPath="/main">
-      <Navbar variant="analyst" />
+      <Navbar />
       {children}
     </AuthGuard>
   );

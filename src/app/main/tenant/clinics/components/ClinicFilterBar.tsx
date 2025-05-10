@@ -10,7 +10,7 @@ import {
 import { CgSpinner } from "react-icons/cg";
 import { Toggle } from "@radix-ui/react-toggle";
 import { TbHeart, TbHeartOff } from "react-icons/tb";
-import { CLINIC_EQUIPMENTS } from "@/types/clinicTypes";
+import { CLINIC_EQUIPMENTS, ClinicEquipmentType } from "@/types/clinicTypes";
 import { constToTitleCase } from "@/lib/textUtils";
 import DatePicker from "@/components/DatePicker";
 
@@ -18,7 +18,7 @@ interface SearchParams {
   location: string;
   date: Date | undefined;
   time: string;
-  equipment: string[];
+  equipment: ClinicEquipmentType[];
   showSaved: boolean;
 }
 
@@ -108,8 +108,8 @@ export default function ClinicFilterBar({
       date: selectedDate,
       time: formattedTime,
       equipment: selectedEquipment.map(
-        (id) => equipmentOptions.find((eq) => eq.id === id)?.name || ""
-      ),
+        (id) => equipmentOptions.find((eq) => eq.id === id)?.name
+      ) as ClinicEquipmentType[],
       showSaved: showSaved
     };
     onSearch(searchParams);

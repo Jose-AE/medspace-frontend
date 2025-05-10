@@ -10,7 +10,7 @@ export interface User {
   fullName: string;
   email: string;
   firebaseUid: string;
-  profilePhotoUrl: string;
+  profilePictureUrl: string;
   userType: UserType;
   tenantSpecialty: TenantSpecialty;
   averageRating: number;
@@ -24,7 +24,7 @@ export type UserCompact = Pick<
   User,
   | "id"
   | "fullName"
-  | "profilePhotoUrl"
+  | "profilePictureUrl"
   | "userType"
   | "averageRating"
   | "createdAt"

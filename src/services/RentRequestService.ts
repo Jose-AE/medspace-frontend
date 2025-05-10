@@ -30,4 +30,27 @@ export class RentRequestService {
       throw error;
     }
   }
+
+  static async sendRentRequest(
+    clinicId: number,
+    comments: string,
+    dates: Date[]
+  ): Promise<void> {
+    try {
+      const headers = await AuthService.getAuthHeaders();
+
+      const body = {
+        clinicId,
+        comments,
+        dates: dates.map((date) => date.toISOString().split("T")[0])
+      };
+
+      await axios.post<ApiResponse<null>>(this.BASE_URL, body, {
+        headers
+      });
+    } catch (error) {
+      console.error("[RentRequestService]: Send rent request error:", error);
+      throw error;
+    }
+  }
 }

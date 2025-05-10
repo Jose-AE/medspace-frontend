@@ -11,6 +11,7 @@ interface BaseProps {
   toDate?: Date;
   className?: ClassValue;
   disabledDates?: Date[];
+  enabledDaysOfWeek?: number[];
 }
 
 type Props =
@@ -37,8 +38,15 @@ export default function DatePicker({
   toDate,
   disabledDates,
   className,
-  selectedDate
+  selectedDate,
+  enabledDaysOfWeek = []
 }: Props) {
+  const allWeekDays = [0, 1, 2, 3, 4, 5, 6];
+
+  const disabledDaysOfWeek = allWeekDays.filter(
+    (day) => !enabledDaysOfWeek.includes(day)
+  );
+
   return (
     <div
       className={cn(
@@ -52,6 +60,9 @@ export default function DatePicker({
           selected={selectedDate}
           onSelect={onSelectDate}
           disabled={[
+            {
+              dayOfWeek: enabledDaysOfWeek.length > 0 ? disabledDaysOfWeek : []
+            },
             { before: fromDate, after: toDate } as Matcher,
             ...(disabledDates || [])
           ]}
@@ -63,6 +74,9 @@ export default function DatePicker({
           selected={selectedDate}
           onSelect={onSelectDate}
           disabled={[
+            {
+              dayOfWeek: enabledDaysOfWeek.length > 0 ? disabledDaysOfWeek : []
+            },
             { before: fromDate, after: toDate } as Matcher,
             ...(disabledDates || [])
           ]}
@@ -74,6 +88,9 @@ export default function DatePicker({
           selected={selectedDate}
           onSelect={onSelectDate}
           disabled={[
+            {
+              dayOfWeek: enabledDaysOfWeek.length > 0 ? disabledDaysOfWeek : []
+            },
             { before: fromDate, after: toDate } as Matcher,
             ...(disabledDates || [])
           ]}

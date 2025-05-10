@@ -1,6 +1,6 @@
 import { Meta, StoryObj } from "@storybook/react";
-import DatePicker from "@/components/DatePicker"; // Adjust the import path as needed
-import { addDays, subDays } from "date-fns"; // You might need to install date-fns
+import DatePicker from "@/components/DatePicker";
+import { addDays, subDays } from "date-fns";
 
 const meta: Meta<typeof DatePicker> = {
   title: "Components/DatePicker",
@@ -12,7 +12,7 @@ const meta: Meta<typeof DatePicker> = {
   argTypes: {
     mode: {
       control: "select",
-      options: ["single", "multiple"],
+      options: ["single", "multiple", "range"],
       description: "Selection mode of the date picker"
     },
     onSelectDate: {
@@ -38,46 +38,68 @@ const meta: Meta<typeof DatePicker> = {
 export default meta;
 type Story = StoryObj<typeof DatePicker>;
 
-// Default DatePicker
+// Default DatePicker (single mode)
 export const Default: Story = {
   args: {
-    onSelectDate: (date) => console.log("Selected date:", date)
+    mode: "single",
+    selectedDate: new Date(),
+    onSelectDate: (date: Date | undefined) =>
+      console.log("Selected date:", date)
   }
 };
 
-// DatePicker with date range constraints
+// With Date Range (single mode)
 export const WithDateRange: Story = {
   args: {
-    onSelectDate: (date) => console.log("Selected date:", date),
-    fromDate: subDays(new Date(), 5), // 5 days ago
-    toDate: addDays(new Date(), 30) // 30 days in future
+    mode: "single",
+    selectedDate: new Date(),
+    onSelectDate: (date: Date | undefined) =>
+      console.log("Selected date:", date),
+    fromDate: subDays(new Date(), 5),
+    toDate: addDays(new Date(), 30)
   }
 };
 
-// DatePicker with disabled dates
+// With Disabled Dates (single mode)
 export const WithDisabledDates: Story = {
   args: {
-    onSelectDate: (date) => console.log("Selected date:", date),
-    disabledDates: [
-      new Date(), // Today
-      addDays(new Date(), 2), // Day after tomorrow
-      addDays(new Date(), 5) // 5 days from now
-    ]
+    mode: "single",
+    selectedDate: new Date(),
+    onSelectDate: (date: Date | undefined) =>
+      console.log("Selected date:", date),
+    disabledDates: [new Date(), addDays(new Date(), 2), addDays(new Date(), 5)]
   }
 };
 
-// DatePicker with custom styling
+// Custom Styling (single mode)
 export const CustomStyling: Story = {
   args: {
-    onSelectDate: (date) => console.log("Selected date:", date),
+    mode: "single",
+    selectedDate: new Date(),
+    onSelectDate: (date: Date | undefined) =>
+      console.log("Selected date:", date),
     className: "bg-blue-50 border-blue-200"
   }
 };
 
-// DatePicker in multiple selection mode
+// Multiple selection mode
 export const MultipleSelection: Story = {
   args: {
-    onSelectDate: (dates) => console.log("Selected dates:", dates),
-    mode: "multiple"
+    mode: "multiple",
+    selectedDate: [new Date(), addDays(new Date(), 1)],
+    onSelectDate: (dates: Date[] | undefined) =>
+      console.log("Selected dates:", dates)
+  }
+};
+
+// Range selection mode
+export const RangeSelection: Story = {
+  args: {
+    mode: "range",
+    selectedDate: {
+      from: subDays(new Date(), 2),
+      to: addDays(new Date(), 3)
+    },
+    onSelectDate: (range) => console.log("Selected range:", range)
   }
 };

@@ -2,7 +2,6 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
-  User as FirebaseUser,
   onAuthStateChanged
 } from "firebase/auth";
 import { setCookie, deleteCookie } from "cookies-next";
@@ -10,6 +9,7 @@ import { UserService } from "./UserService";
 import { User, UserRegistrationData } from "@/types/userTypes";
 import { auth } from "@/lib/firebase/firebaseApp";
 import { getCookieServer } from "@/lib/getCookieServer";
+
 
 export class AuthService {
   static USER_COOKIE_NAME = "__current_user";
@@ -30,16 +30,6 @@ export class AuthService {
     } else {
       await deleteCookie(this.USER_TOKEN_COOKIE_NAME);
     }
-  }
-
-  // Check if user is authenticated
-  static isAuthenticated(): boolean {
-    return !!auth.currentUser;
-  }
-
-  // Get the current Firebase auth user
-  private static getCurrentFirebaseUser(): FirebaseUser | null {
-    return auth.currentUser;
   }
 
   // Subscribe to auth state changes
@@ -157,7 +147,8 @@ export class AuthService {
     try {
       const token = await this.getIdToken();
       return {
-        Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${token}`,
+        'ngrok-skip-browser-warning': 'true', // <-- This is the key
       };
     } catch (error) {
       console.error("Get auth headers error:", error);

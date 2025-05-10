@@ -3,10 +3,10 @@
 import MultistepFormNavItem from "@/components/MultistepFormNavItem";
 import { cn } from "@/lib/utils";
 import { useCreateClinicForm } from "@/hooks/useCreateClinicForm";
-import BasicInfoSection from "./steps/BasicInfoSection";
-import PhotosSection from "./steps/PhotosSection";
-import RentDataSection from "./steps/RentDataSection";
-import PropertyProof from "./steps/PropertyProofSection";
+import BasicInfoSection from "./components/BasicInfoSection";
+import PhotosSection from "./components/PhotosSection";
+import RentDataSection from "./components/RentDataSection";
+import PropertyProof from "./components/PropertyProofSection";
 import { useState } from "react";
 
 export default function CreateClinicPage() {

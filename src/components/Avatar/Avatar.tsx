@@ -1,5 +1,5 @@
 import React from "react";
-import Image from "next/image";
+import Image from "@/components/Image";
 import { cn } from "@/lib/utils";
 import { ClassValue } from "clsx";
 
@@ -17,11 +17,13 @@ export default function Avatar({ className, imageUrl }: Props) {
       )}
     >
       <Image
-        src={imageUrl || "/pfp_placeholder.png"}
+        placeholderImage="/pfp_placeholder.png"
+        src={imageUrl}
         alt="Avatar"
         fill
         className="object-cover"
         priority
+        sizes="100%"
       />
     </div>
   );
