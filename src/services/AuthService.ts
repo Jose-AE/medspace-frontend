@@ -10,6 +10,7 @@ import { User, UserRegistrationData } from "@/types/userTypes";
 import { auth } from "@/lib/firebase/firebaseApp";
 import { getCookieServer } from "@/lib/getCookieServer";
 
+
 export class AuthService {
   static USER_COOKIE_NAME = "__current_user";
   static USER_TOKEN_COOKIE_NAME = "__user_token";
@@ -146,7 +147,8 @@ export class AuthService {
     try {
       const token = await this.getIdToken();
       return {
-        Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${token}`,
+        'ngrok-skip-browser-warning': 'true', // <-- This is the key
       };
     } catch (error) {
       console.error("Get auth headers error:", error);
