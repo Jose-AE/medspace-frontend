@@ -1,9 +1,9 @@
 "use client";
 import { RentRequestPreview } from "@/types/rentRequestTypes";
 import LandlordRequestItem from "./LandlordRequestItem";
+import { useState } from "react";
 import { RentRequestService } from "@/services/RentRequestService";
 import toast from "react-hot-toast";
-import { useState } from "react";
 
 interface RentRequestListProps {
   rentRequests: RentRequestPreview[];
@@ -45,15 +45,11 @@ export default function RentRequestList({
       {requests.map((request) => (
         <LandlordRequestItem
           key={request.id}
+          requestId={request.id}
+          setRequests={setRequests}
           specialistName={request.tenantFullName}
           date={request.startDate}
           officeName={request.clinicDisplayName}
-          onClickAccept={() => {
-            handleAcceptRequest(request.id);
-          }}
-          onClickDeny={() => {
-            handleRejectRequest(request.id);
-          }}
           specialistPhoto={request.tenantProfilePictureUrl}
         />
       ))}
