@@ -115,6 +115,7 @@ export default async function ClinicPage({
               availibility={{
                 form: clinicData.availableFromDate,
                 to: clinicData.availableToDate,
+                occupiedDates: clinicData.occupiedDates,
                 weekdays:
                   clinicData.availabilities?.map(
                     (a) => WEEK_DAY_NUMBERS[a.weekDay]

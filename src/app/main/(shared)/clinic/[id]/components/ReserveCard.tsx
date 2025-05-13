@@ -22,6 +22,7 @@ interface Props {
     form: Date;
     to: Date;
     weekdays?: number[];
+    occupiedDates?: Date[];
   };
 }
 
@@ -188,6 +189,7 @@ export default function ReserveCard({
                 fromDate={availibility.form}
                 toDate={availibility.to}
                 selectedDate={selectedDays}
+                disabledDates={availibility.occupiedDates || []}
                 onSelectDate={(days) => {
                   setSelectedDays(days || []);
                 }}

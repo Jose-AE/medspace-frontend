@@ -22,8 +22,7 @@ export class ClinicService {
       data.addressStreet.length > MAX_STREET_LENGTH
         ? data.addressStreet.slice(0, MAX_STREET_LENGTH)
         : data.addressStreet;
-        console.log("street", street)
-        const zip = data.addressZip?.trim() || "00000";
+    const zip = data.addressZip?.trim() || "00000";
     const body = {
       displayName: data.displayName,
       category: data.category,
@@ -38,7 +37,7 @@ export class ClinicService {
       addressZip: zip,
       addressCountry: data.addressCountry,
       addressLongitude: data.addressLongitude?.toString() ?? "",
-      addressLatitude:data.addressLatitude?.toString() ?? "",
+      addressLatitude: data.addressLatitude?.toString() ?? ""
     };
 
     const headers = await AuthService.getAuthHeaders();
@@ -133,6 +132,22 @@ export class ClinicService {
       if (!response.data || !response.data.data) {
         return null;
       }
+
+      //Delete when endpoint is ready
+      const dates = [
+        //YYYY-MM-DD
+        "2025-05-02",
+        "2025-05-03",
+        "2025-05-04",
+        "2025-05-05",
+        "2025-05-06"
+      ];
+
+      const formattedDates = dates.map((date) => {
+        return new Date(date);
+      });
+      response.data.data.occupiedDates = formattedDates;
+      ///////
 
       return response.data.data;
     } catch (error) {
