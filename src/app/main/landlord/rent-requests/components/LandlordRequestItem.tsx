@@ -2,14 +2,13 @@
 import Button from "@/components/Button";
 import React from "react";
 import Image from "@/components/Image";
-import { dateToString } from "@/lib/dateUtils";
 import toast from "react-hot-toast";
 import { RentRequestService } from "@/services/RentRequestService";
 import { RentRequestPreview } from "@/types/rentRequestTypes";
+import { FaInfoCircle } from "react-icons/fa";
 
 interface LandlordRequestItemProps {
   specialistName: string;
-  date: Date;
   officeName: string;
   specialistPhoto?: string;
   requestId: number;
@@ -18,11 +17,9 @@ interface LandlordRequestItemProps {
 
 const RequestDetails = ({
   specialistName,
-  date,
   specialistPhoto
 }: {
   specialistName: string;
-  date: Date;
   specialistPhoto?: string;
 }) => (
   <div className="flex items-center space-x-2">
@@ -38,7 +35,6 @@ const RequestDetails = ({
     )}
     <div className="flex flex-col">
       <strong className="text-base font-medium">{specialistName}</strong>
-      <small className="text-gray-500 text-sm">{dateToString(date)}</small>
     </div>
   </div>
 );
@@ -64,7 +60,6 @@ const RequestActions = ({
 
 const LandlordRequestItem: React.FC<LandlordRequestItemProps> = ({
   specialistName,
-  date,
   officeName,
   specialistPhoto,
   requestId,
@@ -102,10 +97,12 @@ const LandlordRequestItem: React.FC<LandlordRequestItemProps> = ({
     <div className="flex items-center justify-between p-4 bg-white shadow-sm rounded-lg w-full max-w-6xl mx-auto">
       <RequestDetails
         specialistName={specialistName}
-        date={date}
         specialistPhoto={specialistPhoto}
       />
-      <div className="flex-1 ml-4 text-gray-700">{officeName}</div>
+      <div className="flex-1 ml-4 text-gray-700 flex items-center gap-3">
+        <p>{officeName}</p>
+        <FaInfoCircle className="text-gray-400 text-2xl cursor-pointer" />
+      </div>
       <RequestActions
         isLoading={isLoading}
         onClickAccept={handleAcceptRequest}

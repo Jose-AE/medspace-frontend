@@ -48,7 +48,6 @@ export default function RentRequestList({
           requestId={request.id}
           setRequests={setRequests}
           specialistName={request.tenantFullName}
-          date={request.startDate}
           officeName={request.clinicDisplayName}
           specialistPhoto={request.tenantProfilePictureUrl}
         />
