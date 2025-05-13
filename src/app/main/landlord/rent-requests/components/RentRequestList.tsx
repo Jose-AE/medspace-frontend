@@ -18,23 +18,25 @@ export default function RentRequestList({
     return <div>No rent requests available.</div>;
   }
 
-  const handleRejectRequest = async (requestId: string) => {
+  const handleRejectRequest = async (requestId: number) => {
     try {
       await RentRequestService.rejectRentRequest(requestId);
       setRequests((prev) => prev.filter((r) => r.id !== requestId));
       toast.success("Rent request rejected successfully.");
     } catch (error) {
       toast.error("Something went wrong. Please try again.");
+      console.error("Error rejecting rent request:", error);
     }
   };
 
-  const handleAcceptRequest = async (requestId: string) => {
+  const handleAcceptRequest = async (requestId: number) => {
     try {
       await RentRequestService.acceptRentRequest(requestId);
       setRequests((prev) => prev.filter((r) => r.id !== requestId));
       toast.success("Rent request accepted successfully.");
     } catch (error) {
       toast.error("Something went wrong. Please try again.");
+      console.error("Error accepting rent request:", error);
     }
   };
 

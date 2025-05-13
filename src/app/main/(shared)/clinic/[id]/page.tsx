@@ -10,6 +10,7 @@ import AvailabilitySection from "./components/AvailabilitySection";
 import LocationSection from "./components/LocationSection";
 import ReviewsSection from "./components/ReviewsSection";
 import ReserveCard from "./components/ReserveCard";
+import { UserService } from "@/services/UserService";
 
 export default async function ClinicPage({
   params
@@ -26,9 +27,19 @@ export default async function ClinicPage({
     includePhotos: true
   });
 
+  console.log(clinicData);
+
+  console.log(clinicData?.landLordId);
+
   if (!clinicData) {
     return <div>Clinic not found</div>;
   }
+
+  const userData = await UserService.fetchPublicUserProfile(
+    clinicData.landLordId
+  );
+
+  console.log(userData);
 
   return (
     <div className="max-w-6xl mx-auto font-sans">
@@ -51,22 +62,7 @@ export default async function ClinicPage({
             className={`${userType === "TENANT" ? "w-full lg:w-8/12 pr-0 lg:pr-6" : "w-full pr-0"}`}
           >
             {/* Landlord Info - Shared */}
-            <LandlordInfoSection
-              landlordData={{
-                averageRating: 5,
-                createdAt: new Date(),
-                fullName: "Osdaddy",
-                id: 0,
-                reviews: [],
-                pfpPath: "",
-                bio: "s",
-                tenantSpecialty: {
-                  id: 1,
-                  name: "DENTAL"
-                },
-                userType: "LANDLORD"
-              }}
-            />
+            <LandlordInfoSection landlordData={userData} />
 
             {/* Description - Shared */}
             <DescriptionSection description={clinicData.description} />

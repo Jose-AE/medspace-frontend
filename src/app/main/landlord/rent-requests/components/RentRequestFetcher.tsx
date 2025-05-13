@@ -7,5 +7,5 @@ export default async function RentRequestFetcher() {
     RENT_REQUEST_STATUS.PENDING
   );
 
-  return <RentRequestList rentRequests={rentRequests.data!} />;
+  return <RentRequestList rentRequests={rentRequests} />;
 }

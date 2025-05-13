@@ -16,7 +16,7 @@ const navbarLinks = {
     { name: "Rent Requests", href: "/main/landlord/rent-requests" },
     { name: "My Clinics", href: "/main/landlord/my-clinics" },
     { name: "New Clinic", href: "/main/landlord/create-clinic" },
-    { name: "Past tenants", href: "/past-tenants" },
+    { name: "Past tenants", href: "/main/landlord/past-tenants" },
     { name: "Notifications", href: "/notifications" }
   ],
   analyst: [

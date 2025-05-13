@@ -2,10 +2,11 @@
 import Button from "@/components/Button";
 import React from "react";
 import Image from "@/components/Image";
+import { dateToString } from "@/lib/dateUtils";
 
 interface LandlordRequestItemProps {
   specialistName: string;
-  date: string;
+  date: Date;
   officeName: string;
   onClickAccept: () => void;
   onClickDeny: () => void;
@@ -18,7 +19,7 @@ const RequestDetails = ({
   specialistPhoto
 }: {
   specialistName: string;
-  date: string;
+  date: Date;
   specialistPhoto?: string;
 }) => (
   <div className="flex items-center space-x-2">
@@ -34,7 +35,7 @@ const RequestDetails = ({
     )}
     <div className="flex flex-col">
       <strong className="text-base font-medium">{specialistName}</strong>
-      <small className="text-gray-500 text-sm">{date}</small>
+      <small className="text-gray-500 text-sm">{dateToString(date)}</small>
     </div>
   </div>
 );

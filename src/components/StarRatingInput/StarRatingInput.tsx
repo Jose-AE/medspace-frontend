@@ -1,8 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { FaStar } from "react-icons/fa";
-import { CiStar } from "react-icons/ci";
+import { FaRegStar, FaStar } from "react-icons/fa";
 
 type StarRatingProps = {
   defaultRating?: number;
@@ -35,8 +34,8 @@ export default function StarRatingInput({
   };
 
   return (
-    <div className="rating-container" style={{ padding: 20 }}>
-      <div className="stars" style={{ display: "flex", gap: 8 }}>
+    <div className="rating-container" style={{ padding: 0 }}>
+      <div className="stars" style={{ display: "flex", gap: 4 }}>
         {[...Array(5)].map((_, i) => {
           const isFilled =
             hoveredIndex !== null ? i <= hoveredIndex : i < rating;
@@ -52,7 +51,7 @@ export default function StarRatingInput({
               {isFilled ? (
                 <FaStar color="orange" size={28} />
               ) : (
-                <CiStar color="orange" size={28} />
+                <FaRegStar color="orange" size={28} />
               )}
             </div>
           );
@@ -65,9 +64,6 @@ export default function StarRatingInput({
       />
       <div ref={ratingValueRef} style={{ marginTop: 12 }} />
       <style jsx>{`
-        .clickedStars {
-          filter: drop-shadow(0 0 2px orange);
-        }
         .star:hover {
           transform: scale(1.1);
         }
