@@ -54,8 +54,66 @@ export default function MetricsPage() {
   };
 
   const handleDownloadPDF = () => {
-    // TODO: Implement PDF download
-    console.log('Downloading PDF...');
+    // Create a style element for print
+    const style = document.createElement('style');
+    style.textContent = `
+      @media print {
+        body * {
+          visibility: hidden;
+        }
+        .print-content, .print-content * {
+          visibility: visible;
+        }
+        .print-content {
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 100%;
+        }
+        .no-print {
+          display: none !important;
+        }
+        /* Add some print-specific styling */
+        .print-content {
+          padding: 20px;
+        }
+        /* Ensure charts and visualizations are properly sized for print */
+        .print-content canvas, 
+        .print-content svg {
+          max-width: 100% !important;
+          height: auto !important;
+        }
+      }
+    `;
+    document.head.appendChild(style);
+
+    // Find the active dashboard content
+    const activeContent = document.querySelector(`[data-dashboard-tab="${activeTab}"]`);
+    if (!activeContent) {
+      console.error('Active dashboard content not found');
+      return;
+    }
+
+    // Add print class to the active content
+    activeContent.classList.add('print-content');
+
+    // Hide elements we don't want to print
+    const buttons = document.querySelectorAll('button');
+    buttons.forEach(button => button.classList.add('no-print'));
+
+    // Set up cleanup handler
+    const cleanup = () => {
+      document.head.removeChild(style);
+      activeContent.classList.remove('print-content');
+      buttons.forEach(button => button.classList.remove('no-print'));
+      window.removeEventListener('afterprint', cleanup);
+    };
+
+    // Add event listener for after print
+    window.addEventListener('afterprint', cleanup);
+
+    // Trigger print
+    window.print();
   };
 
   const handleTabChange = (tab: string) => {
@@ -65,11 +123,11 @@ export default function MetricsPage() {
   const renderDashboardContent = () => {
     switch (activeTab) {
       case 'specialist':
-        return <SpecialistHeatmapSection />;
+        return <div data-dashboard-tab="specialist"><SpecialistHeatmapSection /></div>;
       case 'clinic':
-        return <ClinicDemandDashboardSection />;
+        return <div data-dashboard-tab="clinic"><ClinicDemandDashboardSection /></div>;
       case 'disease':
-        return <DiseasePrevalenceSection />;
+        return <div data-dashboard-tab="disease"><DiseasePrevalenceSection /></div>;
       default:
         return null;
     }
