@@ -2,11 +2,14 @@
 
 import React, {
   InputHTMLAttributes,
+  ReactNode,
   TextareaHTMLAttributes,
   useState
 } from "react";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { cn } from "@/lib/utils";
+import { MdInfoOutline } from "react-icons/md";
+import Tooltip from "../Tooltip/Tooltip";
 
 // Base type for shared properties
 interface BaseProps {
@@ -14,6 +17,7 @@ interface BaseProps {
   label?: string;
   isInvalid?: boolean;
   invalidMessage?: string;
+  labelTooltip?: ReactNode; // Optional tooltip in label
 }
 
 interface InputProps extends BaseProps, InputHTMLAttributes<HTMLInputElement> {
@@ -37,6 +41,7 @@ function TextInput({
   invalidMessage,
   label,
   type,
+  labelTooltip,
   ...props
 }: Props) {
   const [showPassword, setShowPassword] = useState(false);
@@ -57,9 +62,14 @@ function TextInput({
   return (
     <div className={cn("w-full", className)}>
       <label
-        className={`mt-4 block text-sm font-medium text-gray-800 ${!label && "hidden"}`}
+        className={`flex mt-4 items-center justify-between  text-sm font-medium text-gray-800 ${!label && "hidden"}`}
       >
         {label}
+        {labelTooltip && (
+          <Tooltip body={labelTooltip}>
+            <MdInfoOutline className="ml-2" />
+          </Tooltip>
+        )}
       </label>
 
       {!isTextArea && (
