@@ -32,6 +32,7 @@ export default function RentRequestList({
           tenantSpecialty={request.tenantSpecialty}
           clinicAddress={request.clinicAddress}
           clinicMainPhotoPath={request.clinicMainPhotoPath}
+          comments={request.comments}
         />
       ))}
     </div>

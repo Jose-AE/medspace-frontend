@@ -23,6 +23,7 @@ interface LandlordRequestItemProps {
   requestedDays: Date[];
   clinicAddress: string;
   clinicMainPhotoPath: string;
+  comments: string;
 }
 
 const RequestDetails = ({
@@ -79,7 +80,8 @@ const LandlordRequestItem: React.FC<LandlordRequestItemProps> = ({
   setRequests,
   requestedDays,
   clinicAddress,
-  clinicMainPhotoPath
+  clinicMainPhotoPath,
+  comments
 }) => {
   const [isLoading, setIsLoading] = React.useState(false);
   const [isDetailsModalOpen, setIsDetailsModalOpen] = React.useState(false);
@@ -139,8 +141,16 @@ const LandlordRequestItem: React.FC<LandlordRequestItemProps> = ({
                     {tenantFullName}
                   </Link>
                   <p className="text-sm text-gray-500">{tenantSpecialty}</p>
+                  <p>{comments}</p>
                 </div>
               </div>
+              {/* Comments */}
+              {comments && (
+                <div className="rounded-xl border border-gray-200 bg-gray-50 p-4 text-sm text-gray-700 whitespace-pre-wrap">
+                  <p className="font-medium text-gray-600 mb-1">Comments:</p>
+                  {comments}
+                </div>
+              )}
             </div>
 
             {/* Clinic Info */}
@@ -171,17 +181,19 @@ const LandlordRequestItem: React.FC<LandlordRequestItemProps> = ({
             <div className="space-y-3">
               <h3 className="text-lg font-medium">Requested Dates</h3>
               <div className="max-h-50 overflow-y-auto pr-1 flex flex-col gap-2">
-                {requestedDays.map((day, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center gap-3 px-4 py-2 bg-gray-50 rounded-lg border border-gray-200 shadow-sm"
-                  >
-                    <CalendarIcon className="h-5 w-5 text-primary" />
-                    <span className="text-gray-700 font-medium">
-                      {dateToString(new Date(day))}
-                    </span>
-                  </div>
-                ))}
+                {requestedDays
+                  .sort((a, b) => new Date(a).getTime() - new Date(b).getTime())
+                  .map((day, index) => (
+                    <div
+                      key={index}
+                      className="flex items-center gap-3 px-4 py-2 bg-gray-50 rounded-lg border border-gray-200 shadow-sm"
+                    >
+                      <CalendarIcon className="h-5 w-5 text-primary" />
+                      <span className="text-gray-700 font-medium">
+                        {dateToString(new Date(day))}
+                      </span>
+                    </div>
+                  ))}
               </div>
             </div>
 
