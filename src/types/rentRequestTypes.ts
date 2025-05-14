@@ -1,3 +1,5 @@
+import { ClinicAvailability } from "./clinicTypes";
+
 export const RENT_REQUEST_STATUS = {
   PENDING: "PENDING",
   ACCEPTED: "ACCEPTED",
@@ -17,6 +19,7 @@ export interface RentRequestPreview {
   clinicDisplayName: string;
   clinicMainPhotoPath: string;
   clinicAddress: string;
+  clinicAvailabilities: ClinicAvailability[];
   tenantFullName: string;
   tenantProfilePictureUrl: string;
   tenantSpecialty: string;
