@@ -103,6 +103,18 @@ export default function ClinicsList({ clinics }: Props) {
           setDeleteModalIsOpen(false);
         }}
       />
+
+      {clinics.length === 0 && (
+        <div className="flex flex-col items-center justify-center gap-4 p-8">
+          <p className="text-lg font-semibold">
+            You don&apos;t have any clinics
+          </p>
+          <p className="text-sm text-gray-500">
+            You can create a new clinic by clicking the <b>Create</b> below.
+          </p>
+        </div>
+      )}
+
       {clinics.map((clinic, i) => (
         <ClinicListItem
           key={i}

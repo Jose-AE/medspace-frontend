@@ -61,7 +61,7 @@ export interface Clinic {
   addressLongitude: string;
   addressLatitude: string;
 
-  landlordId: number;
+  landLordId: number;
   averageRating: number;
 
   photos?: ClinicPhoto[];
