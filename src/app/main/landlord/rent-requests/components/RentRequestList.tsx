@@ -21,18 +21,8 @@ export default function RentRequestList({
       {requests.map((request) => (
         <LandlordRequestItem
           key={request.id}
-          requestId={request.id}
           setRequests={setRequests}
-          tenantFullName={request.tenantFullName}
-          clinicDisplayName={request.clinicDisplayName}
-          tenantPfpPath={request.tenantProfilePictureUrl}
-          requestedDays={request.requestedDays}
-          clinciId={request.clinicId}
-          tenantId={request.tenantId}
-          tenantSpecialty={request.tenantSpecialty}
-          clinicAddress={request.clinicAddress}
-          clinicMainPhotoPath={request.clinicMainPhotoPath}
-          comments={request.comments}
+          requestPreview={request}
         />
       ))}
     </div>

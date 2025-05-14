@@ -12,18 +12,8 @@ import { dateToString } from "@/lib/dateUtils";
 import { CalendarIcon } from "lucide-react";
 
 interface LandlordRequestItemProps {
-  clinicDisplayName: string;
-  tenantPfpPath: string;
-  tenantFullName: string;
-  tenantSpecialty: string;
-  tenantId: number;
-  clinciId: number;
-  requestId: number;
   setRequests: React.Dispatch<React.SetStateAction<RentRequestPreview[]>>;
-  requestedDays: Date[];
-  clinicAddress: string;
-  clinicMainPhotoPath: string;
-  comments: string;
+  requestPreview: RentRequestPreview;
 }
 
 const RequestDetails = ({
@@ -70,18 +60,8 @@ const RequestActions = ({
 );
 
 const LandlordRequestItem: React.FC<LandlordRequestItemProps> = ({
-  tenantFullName,
-  tenantPfpPath,
-  tenantSpecialty,
-  tenantId,
-  clinicDisplayName,
-  clinciId,
-  requestId,
   setRequests,
-  requestedDays,
-  clinicAddress,
-  clinicMainPhotoPath,
-  comments
+  requestPreview
 }) => {
   const [isLoading, setIsLoading] = React.useState(false);
   const [isDetailsModalOpen, setIsDetailsModalOpen] = React.useState(false);
@@ -89,8 +69,8 @@ const LandlordRequestItem: React.FC<LandlordRequestItemProps> = ({
   const handleRejectRequest = async () => {
     try {
       setIsLoading(true);
-      await RentRequestService.rejectRentRequest(requestId);
-      setRequests((prev) => prev.filter((r) => r.id !== requestId));
+      await RentRequestService.rejectRentRequest(requestPreview.id);
+      setRequests((prev) => prev.filter((r) => r.id !== requestPreview.id));
       toast.success("Rent request rejected successfully.");
     } catch (error) {
       toast.error("Something went wrong. Please try again.");
@@ -102,8 +82,8 @@ const LandlordRequestItem: React.FC<LandlordRequestItemProps> = ({
   const handleAcceptRequest = async () => {
     try {
       setIsLoading(true);
-      await RentRequestService.acceptRentRequest(requestId);
-      setRequests((prev) => prev.filter((r) => r.id !== requestId));
+      await RentRequestService.acceptRentRequest(requestPreview.id);
+      setRequests((prev) => prev.filter((r) => r.id !== requestPreview.id));
       toast.success("Rent request accepted successfully.");
     } catch (error) {
       toast.error("Something went wrong. Please try again.");
@@ -126,7 +106,7 @@ const LandlordRequestItem: React.FC<LandlordRequestItemProps> = ({
               <h3 className="text-lg font-medium">Tenant Info</h3>
               <div className="flex items-center gap-4">
                 <Image
-                  src={tenantPfpPath}
+                  src={requestPreview.tenantProfilePictureUrl}
                   alt="Tenant photo"
                   placeholderImage="/pfp_placeholder.png"
                   className="h-10 w-10 rounded-full object-cover border"
@@ -135,20 +115,21 @@ const LandlordRequestItem: React.FC<LandlordRequestItemProps> = ({
                 />
                 <div>
                   <Link
-                    href={`/main/user/${tenantId}`}
+                    href={`/main/user/${requestPreview.tenantId}`}
                     className="text-primary font-medium hover:underline"
                   >
-                    {tenantFullName}
+                    {requestPreview.tenantFullName}
                   </Link>
-                  <p className="text-sm text-gray-500">{tenantSpecialty}</p>
-                  <p>{comments}</p>
+                  <p className="text-sm text-gray-500">
+                    {requestPreview.tenantSpecialty}
+                  </p>
                 </div>
               </div>
               {/* Comments */}
-              {comments && (
+              {requestPreview.comments && (
                 <div className="rounded-xl border border-gray-200 bg-gray-50 p-4 text-sm text-gray-700 whitespace-pre-wrap">
                   <p className="font-medium text-gray-600 mb-1">Comments:</p>
-                  {comments}
+                  {requestPreview.comments}
                 </div>
               )}
             </div>
@@ -158,7 +139,7 @@ const LandlordRequestItem: React.FC<LandlordRequestItemProps> = ({
               <h3 className="text-lg font-medium">Clinic Info</h3>
               <div className="flex items-center gap-4">
                 <Image
-                  src={clinicMainPhotoPath}
+                  src={requestPreview.clinicMainPhotoPath}
                   alt="Clinic photo"
                   placeholderImage="/placeholder.png"
                   className="h-10 w-10 rounded-full object-cover border"
@@ -167,12 +148,14 @@ const LandlordRequestItem: React.FC<LandlordRequestItemProps> = ({
                 />
                 <div>
                   <Link
-                    href={`/main/clinic/${clinciId}`}
+                    href={`/main/clinic/${requestPreview.clinicId}`}
                     className="text-primary font-medium hover:underline"
                   >
-                    {clinicDisplayName}
+                    {requestPreview.clinicDisplayName}
                   </Link>
-                  <p className="text-sm text-gray-500">{clinicAddress}</p>
+                  <p className="text-sm text-gray-500">
+                    {requestPreview.clinicAddress}
+                  </p>
                 </div>
               </div>
             </div>
@@ -181,7 +164,7 @@ const LandlordRequestItem: React.FC<LandlordRequestItemProps> = ({
             <div className="space-y-3">
               <h3 className="text-lg font-medium">Requested Dates</h3>
               <div className="max-h-50 overflow-y-auto pr-1 flex flex-col gap-2">
-                {requestedDays
+                {requestPreview.requestedDays
                   .sort((a, b) => new Date(a).getTime() - new Date(b).getTime())
                   .map((day, index) => (
                     <div
@@ -211,11 +194,11 @@ const LandlordRequestItem: React.FC<LandlordRequestItemProps> = ({
       />
       <div className="flex items-center justify-between p-4 bg-white shadow-sm rounded-lg w-full max-w-6xl mx-auto">
         <RequestDetails
-          specialistName={tenantFullName}
-          specialistPhoto={tenantPfpPath}
+          specialistName={requestPreview.tenantFullName}
+          specialistPhoto={requestPreview.tenantProfilePictureUrl}
         />
         <div className="flex-1 ml-4 text-gray-700 flex items-center gap-3">
-          <p>{clinicDisplayName}</p>
+          <p>{requestPreview.clinicDisplayName}</p>
           <FaInfoCircle
             className="text-gray-400 text-2xl cursor-pointer"
             onClick={() => setIsDetailsModalOpen(true)}
