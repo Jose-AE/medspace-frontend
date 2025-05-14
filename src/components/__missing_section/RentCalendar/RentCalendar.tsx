@@ -52,11 +52,7 @@ const RentCalendar = ({
         <input
           className="border-1 border-gray-300  p-1 cursor-pointer rounded-md"
           type="date"
-          value={dateToString(currentDate, {
-            day: "2-digit",
-            month: "2-digit",
-            year: "numeric"
-          })}
+          value={dateToString(currentDate)}
           onChange={handleDayChange}
         />
       </div>
