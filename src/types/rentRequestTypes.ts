@@ -15,6 +15,10 @@ export interface RentRequestPreview {
   tenantId: number;
   clinicId: number;
   clinicDisplayName: string;
+  clinicMainPhotoPath: string;
+  clinicAddress: string;
   tenantFullName: string;
   tenantProfilePictureUrl: string;
+  tenantSpecialty: string;
+  requestedDays: Date[];
 }
