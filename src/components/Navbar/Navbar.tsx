@@ -8,14 +8,14 @@ const navbarLinks = {
   tenant: [
     { name: "Clinics", href: "/main/tenant/clinics" },
     { name: "Rent Requests", href: "/rent-requests" },
-    { name: "Rent Calendar", href: "/rent-calendar" },
+    { name: "Rent Calendar", href: "/main/calendar" },
     { name: "Notifications", href: "/notifications" }
   ],
   landlord: [
     { name: "Metrics", href: "/metrics" },
     { name: "Rent Requests", href: "/main/landlord/rent-requests" },
     { name: "My Clinics", href: "/main/landlord/my-clinics" },
-    { name: "New Clinic", href: "/main/landlord/create-clinic" },
+    { name: "Rent Calendar", href: "/main/calendar" },
     { name: "Past tenants", href: "/main/landlord/past-tenants" },
     { name: "Notifications", href: "/notifications" }
   ],
