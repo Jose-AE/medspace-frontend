@@ -11,7 +11,7 @@ import { dateToString } from "@/lib/dateUtils";
 export class RentRequestService {
   static BASE_URL = env.NEXT_PUBLIC_API_URL + "/rent-requests";
 
-  static async fetchRentRequestsByLandlord(
+  static async fetchRentRequestsByUser(
     status: RentRequestStatusType
   ): Promise<RentRequestPreview[]> {
     try {
@@ -20,7 +20,7 @@ export class RentRequestService {
       const params = new URLSearchParams();
       params.append("status", status);
       const response = await axios.get<ApiResponse<RentRequestPreview[]>>(
-        this.BASE_URL + "/my-received-requests" + `?${params}`,
+        this.BASE_URL + "/my-requests" + `?${params}`,
         {
           headers
         }

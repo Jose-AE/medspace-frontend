@@ -1,39 +1,71 @@
 "use client";
 
 import { dateToString, formatDate, stringToDate } from "@/lib/dateUtils";
+import { RentRequestPreview } from "@/types/rentRequestTypes";
 import { addDays, endOfWeek, startOfWeek } from "date-fns";
+import { useMemo, useState } from "react";
 import { FaRegClock } from "react-icons/fa";
 
 export interface CalendarEvent {
-  id: string;
+  id: number;
   title: string;
   date: Date;
   startTime: string;
   endTime: string;
+  variant: "FUTURE" | "PAST";
 }
 
 const HOURS = Array.from({ length: 24 }, (_, i) => 0 + i);
 
 type RentCalendarProps = {
   /** List of CalendarEvents to render */
-  calendarEvents: CalendarEvent[];
-  /** Current date to display */
-  currentDate: Date;
-  /** Callback to change the current date in parent component */
-  onChangeCurrentDate: (date: Date) => void;
+  rentRequests: RentRequestPreview[];
 };
 
-const RentCalendar = ({
-  calendarEvents,
-  currentDate,
-  onChangeCurrentDate
-}: RentCalendarProps) => {
+const RentCalendar = ({ rentRequests }: RentCalendarProps) => {
+  const [currentDate, setCurrentDate] = useState<Date>(new Date());
   const weekStart = startOfWeek(currentDate, { weekStartsOn: 1 });
   const weekEnd = endOfWeek(currentDate, { weekStartsOn: 1 });
 
+  const WEEKDAY_MAP = {
+    MONDAY: 0,
+    TUESDAY: 1,
+    WEDNESDAY: 2,
+    THURSDAY: 3,
+    FRIDAY: 4,
+    SATURDAY: 5,
+    SUNDAY: 6
+  };
+
+  const calendarEvents = useMemo<CalendarEvent[]>(() => {
+    return rentRequests.flatMap((request) => {
+      return request.requestedDays
+        .map((day) => {
+          const weekDay = new Date(day).getDay();
+          const availability = request.clinicAvailabilities.find(
+            (availability) => weekDay === WEEKDAY_MAP[availability.weekDay]
+          );
+
+          if (!availability) {
+            return null;
+          }
+
+          return {
+            id: request.id,
+            title: request.clinicDisplayName,
+            date: day,
+            startTime: availability.startTime,
+            endTime: availability.endTime,
+            variant: addDays(day, 1) <= new Date() ? "PAST" : "FUTURE"
+          } as CalendarEvent;
+        })
+        .filter((event): event is CalendarEvent => event !== null);
+    });
+  }, [rentRequests]);
+
   const handleDayChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.value) {
-      onChangeCurrentDate(stringToDate(e.target.value));
+      setCurrentDate(stringToDate(e.target.value));
     }
   };
 
@@ -73,7 +105,7 @@ const RentCalendar = ({
           {HOURS.map((hour) => (
             <div
               key={hour}
-              className="h-8 border-t text-sm text-right pr-2 text-gray-500"
+              className="h-6 border-t text-sm text-right pr-2 text-gray-500"
             >
               {hour.toString().padStart(2, "0")}:00
             </div>
@@ -84,7 +116,7 @@ const RentCalendar = ({
           <DayColumn
             key={day.toString()}
             calendarEvents={calendarEvents.filter((event) => {
-              const appointmentDate = new Date(event.date);
+              const appointmentDate = stringToDate(event.date.toString());
               return (
                 appointmentDate >= day && appointmentDate < addDays(day, 1)
               );
@@ -104,7 +136,7 @@ const DayColumn = ({ calendarEvents }: DayColumnProps) => {
   return (
     <div className="relative">
       {HOURS.map((hour) => (
-        <div key={hour} className="h-8 border-t border-gray-200 bg-white"></div>
+        <div key={hour} className="h-6 border-t border-gray-200 bg-white"></div>
       ))}
       {calendarEvents.map((event, i) => (
         <CalendarEventCard key={i} event={event} />
@@ -126,28 +158,34 @@ const CalendarEventCard = ({ event }: CalendarEventCardProps) => {
   const endHour = endHourParts[0];
   const endMinute = endHourParts[1];
 
-  const top = parseFloat(startHour) * 2 + parseFloat(startMinute) / 30.0;
-  const bottom = parseFloat(endHour) * 2 + parseFloat(endMinute) / 30.0;
+  const top = parseFloat(startHour) * 1.5 + parseFloat(startMinute) / 30.0;
+  const bottom = parseFloat(endHour) * 1.5 + parseFloat(endMinute) / 30.0;
   const height = bottom - top;
+
+  const isFuture = event.variant === "FUTURE";
+  const backgroundColor = isFuture ? "bg-primary-200" : "bg-gray-200";
+  const textColor = isFuture ? "text-primary" : "text-gray-500";
+  const clockColor = isFuture ? "fill-primary" : "fill-gray-500";
+  const borderColor = isFuture ? "bg-primary" : "bg-gray-200";
 
   return (
     <div
-      className={`absolute w-full bg-primary-200 text-white rounded-md flex flex-col justify-between p-2`}
+      className={`absolute w-full ${backgroundColor} text-white rounded-md flex flex-col justify-between p-2`}
       style={{
         top: `${top}rem`,
         height: `${height}rem`
       }}
     >
-      <p className="text-xs text-primary-600 font-bold truncate">
-        {event.title}
-      </p>
+      <p className={`text-xs ${textColor} font-bold truncate`}>{event.title}</p>
       <div className="flex gap-2 items-center">
-        <FaRegClock className="fill-primary-600" />
-        <p className="text-xs text-primary-600">
-          {event.startTime} : {event.endTime}
+        <FaRegClock className={clockColor} />
+        <p className={`text-xs ${textColor}`}>
+          {startHour}:{startMinute} - {endHour}:{endMinute}
         </p>
       </div>
-      <div className="absolute top-0 left-0 h-full w-1 bg-primary-600 rounded-l-md"></div>
+      <div
+        className={`absolute top-0 left-0 h-full w-1 ${borderColor} rounded-l-md`}
+      ></div>
     </div>
   );
 };
