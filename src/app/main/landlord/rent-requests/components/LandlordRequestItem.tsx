@@ -192,7 +192,7 @@ const LandlordRequestItem: React.FC<LandlordRequestItemProps> = ({
           </div>
         }
       />
-      <div className="flex items-center justify-between p-4 bg-white shadow-sm rounded-lg w-full max-w-6xl mx-auto">
+      <div className="flex items-center justify-between p-4 bg-white shadow-sm rounded-lg w-full flex-1 mx-auto">
         <RequestDetails
           specialistName={requestPreview.tenantFullName}
           specialistPhoto={requestPreview.tenantProfilePictureUrl}

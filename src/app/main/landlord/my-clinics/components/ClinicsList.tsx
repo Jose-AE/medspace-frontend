@@ -110,7 +110,7 @@ export default function ClinicsList({ clinics }: Props) {
             You don&apos;t have any clinics
           </p>
           <p className="text-sm text-gray-500">
-            You can create a new clinic by clicking the <b>Create</b> below.
+            You can create a new clinic by clicking the <b>Create</b> above.
           </p>
         </div>
       )}
