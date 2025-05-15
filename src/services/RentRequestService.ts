@@ -94,4 +94,21 @@ export class RentRequestService {
       throw error;
     }
   }
+
+  static async cancelRentRequest(rentRequestId: number) {
+    try {
+      const headers = await AuthService.getAuthHeaders();
+
+      await axios.put<ApiResponse<null>>(
+        this.BASE_URL + `/${rentRequestId}/cancel`,
+        {},
+        {
+          headers
+        }
+      );
+    } catch (error) {
+      console.error("[RentRequestService]: Cancel rent request error:", error);
+      throw error;
+    }
+  }
 }
