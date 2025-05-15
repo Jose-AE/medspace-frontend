@@ -18,6 +18,19 @@ export default function TenantList({ pastRentRequests }: Props) {
     setRateModalIsOpen(true);
   }
 
+  if (pastRentRequests.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center gap-4 p-8">
+        <p className="text-lg font-semibold">
+          You don&apos;t have any past tenants.
+        </p>
+        <p className="text-sm text-gray-500">
+          When a tenant finishes their rental period, you will see them here.
+        </p>
+      </div>
+    );
+  }
+
   return (
     <>
       <ReviewModal

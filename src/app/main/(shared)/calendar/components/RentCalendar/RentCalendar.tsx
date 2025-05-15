@@ -18,7 +18,7 @@ export interface CalendarEvent {
 const HOURS = Array.from({ length: 24 }, (_, i) => 0 + i);
 
 type RentCalendarProps = {
-  /** List of CalendarEvents to render */
+  /** List of accepted rent request to render */
   rentRequests: RentRequestPreview[];
 };
 

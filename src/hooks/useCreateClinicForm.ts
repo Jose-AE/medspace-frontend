@@ -21,7 +21,6 @@ export type CreateClinicFormData = Partial<ClinicRegistrationData>;
 
 const ALLOWED_NUM_OF_PHOTOS = 4;
 
-
 const defaultData: CreateClinicFormData = {
   displayName: "",
   description: "",
@@ -33,8 +32,8 @@ const defaultData: CreateClinicFormData = {
   maximumStayInDays: null,
   availabilities: WEEK_DAYS.map((day) => ({
     dayOfWeek: day,
-    fromTime: null,
-    toTime: null,
+    fromTime: "12:00",
+    toTime: "12:00",
     isActive: true
   })),
   propertyProof: null,
@@ -78,16 +77,16 @@ export function useCreateClinicForm() {
         uploadAvailabilities(formData.availabilities!, clinic.id)
       ]);
       toast.success("Clinic created successfully");
+      router.push("/main/landlord/my-clinics");
     } catch (error) {
       console.error("[Clinic]: Error creating clinic", error);
       toast.error("Could not create all resources. Please try again");
       const axiosError = error as AxiosError;
       console.error("CREATE CLINIC ERROR STATUS:", axiosError.response?.status);
       console.error("CREATE CLINIC ERROR DATA:", axiosError.response?.data);
-      throw error;    
+      throw error;
     } finally {
       setIsSubmitting(false);
-      
     }
   };
 

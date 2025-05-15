@@ -13,6 +13,13 @@ import ClinicEquipmentTag from "./ClinicEquipmentTag";
 import { useMapAddress } from "@/hooks/useMapAddress";
 import { Coordinates } from "@/hooks/useMapAddress";
 import { useEffect } from "react";
+import { IconType } from "react-icons";
+import { LiaXRaySolid } from "react-icons/lia";
+import { TbLineScan, TbUserScan } from "react-icons/tb";
+import { LuScanFace } from "react-icons/lu";
+import { PiTestTubeBold } from "react-icons/pi";
+import { RiSurgicalMaskLine } from "react-icons/ri";
+import { MdOutlineLocalPharmacy, MdWheelchairPickup } from "react-icons/md";
 
 export default function BasicInfoSection({
   onClickPrimary,
@@ -109,7 +116,7 @@ export default function BasicInfoSection({
       setError("addressZip", "ZIP Code must be exactly 5 digits");
       isValid = false;
     }
-    
+
     return isValid;
   };
 
@@ -119,6 +126,17 @@ export default function BasicInfoSection({
       return;
     }
     onClickPrimary();
+  };
+
+  const iconMap: Record<ClinicEquipmentType, IconType> = {
+    X_RAY: LiaXRaySolid,
+    CT_SCAN: TbUserScan,
+    MRI: TbLineScan,
+    ULTRASOUND: LuScanFace,
+    LABORATORY: PiTestTubeBold,
+    SURGICAL_THEATER: RiSurgicalMaskLine,
+    PHARMACY: MdOutlineLocalPharmacy,
+    REHABILITATION: MdWheelchairPickup
   };
 
   return (
@@ -173,28 +191,27 @@ export default function BasicInfoSection({
               />
             </div>
             <div className="flex gap-4">
-            <TextInput
-                  label="Address"
-                  value={data.addressStreet ?? ""}
-                  onChange={(e) => {
-                    clearError("addressStreet");
-                    setData("addressStreet", e.target.value);
-                  }}
-                  invalidMessage={errors.addressStreet}
-                  isInvalid={!!errors.addressStreet}
-                />
-              <div className="w-1/3">
               <TextInput
-                label="ZIP Code"
-                value={data.addressZip ?? ""}
+                label="Address"
+                value={data.addressStreet ?? ""}
                 onChange={(e) => {
-                  clearError("addressZip");
-                  setData("addressZip", e.target.value);
+                  clearError("addressStreet");
+                  setData("addressStreet", e.target.value);
                 }}
-                invalidMessage={errors.addressZip}
-                isInvalid={!!errors.addressZip}
+                invalidMessage={errors.addressStreet}
+                isInvalid={!!errors.addressStreet}
               />
-                
+              <div className="w-1/3">
+                <TextInput
+                  label="ZIP Code"
+                  value={data.addressZip ?? ""}
+                  onChange={(e) => {
+                    clearError("addressZip");
+                    setData("addressZip", e.target.value);
+                  }}
+                  invalidMessage={errors.addressZip}
+                  isInvalid={!!errors.addressZip}
+                />
               </div>
             </div>
           </div>
@@ -229,6 +246,7 @@ export default function BasicInfoSection({
           {data.equipments?.map((eq, idx) => (
             <ClinicEquipmentTag
               key={idx}
+              icon={iconMap[eq as ClinicEquipmentType]}
               name={constToTitleCase(eq)}
               onDelete={() => {
                 handleDeleteEquipment(eq);
