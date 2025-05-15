@@ -3,7 +3,8 @@ import { ClinicAvailability } from "./clinicTypes";
 export const RENT_REQUEST_STATUS = {
   PENDING: "PENDING",
   ACCEPTED: "ACCEPTED",
-  DENIED: "DENIED"
+  REJECTED: "REJECTED",
+  CANCELED: "CANCELED"
 } as const;
 export type RentRequestStatusType =
   (typeof RENT_REQUEST_STATUS)[keyof typeof RENT_REQUEST_STATUS];
@@ -15,6 +16,7 @@ export interface RentRequestPreview {
   comments: string;
   status: RentRequestStatusType;
   tenantId: number;
+  landlordId: number;
   clinicId: number;
   clinicDisplayName: string;
   clinicMainPhotoPath: string;
@@ -23,5 +25,7 @@ export interface RentRequestPreview {
   tenantFullName: string;
   tenantProfilePictureUrl: string;
   tenantSpecialty: string;
+  landlordFullName: string;
+  landlordProfilePictureUrl: string;
   requestedDays: Date[];
 }

@@ -7,7 +7,7 @@ import { getUserServerSide } from "../AuthGuard/AuthGuard";
 const navbarLinks = {
   tenant: [
     { name: "Clinics", href: "/main/tenant/clinics" },
-    { name: "Rent Requests", href: "/rent-requests" },
+    { name: "Sent Requests", href: "/main/tenant/my-requests" },
     { name: "Rent Calendar", href: "/main/calendar" },
     { name: "Notifications", href: "/notifications" }
   ],
