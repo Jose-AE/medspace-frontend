@@ -27,4 +27,50 @@ export class ReviewService {
       throw error;
     }
   }
+
+  static async reviewLandlord(
+    landlordId: number,
+    rating: number,
+    comment: string
+  ): Promise<void> {
+    try {
+      //simulate wait
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
+      //   const headers = await AuthService.getAuthHeaders();
+      //   await axios.post<ApiResponse<null>>(
+      //     `${this.BASE_URL}/review-landlord/${landlordId}`,
+      //     {},
+      //     {
+      //       headers
+      //     }
+      //   );
+    } catch (error) {
+      console.error("[ReviewService]: Review landlord error:", error);
+      throw error;
+    }
+  }
+
+  static async reviewClinic(
+    clinicId: number,
+    rating: number,
+    comment: string
+  ): Promise<void> {
+    try {
+      //simulate wait
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
+      //   const headers = await AuthService.getAuthHeaders();
+      //   await axios.post<ApiResponse<null>>(
+      //     `${this.BASE_URL}/review-landlord/${landlordId}`,
+      //     {},
+      //     {
+      //       headers
+      //     }
+      //   );
+    } catch (error) {
+      console.error("[ReviewService]: Review clinic error:", error);
+      throw error;
+    }
+  }
 }
