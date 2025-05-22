@@ -5,9 +5,9 @@ import { HiOutlineDocumentArrowDown } from "react-icons/hi2";
 import { HiOutlineDocumentText } from "react-icons/hi2";
 import DashboardTabs from "./components/DashboardTabs";
 import { useState } from "react";
-import SpecialistHeatmapSection from "./components/SpecialistHeatmapSection";
 import DiseasePrevalenceSection from "./components/DiseasePrevalenceSection";
 import ClinicDemandDashboardSection from "./components/ClinicDemandDashboardSection";
+import SpecialistHeatmapSection from "./components/SpecialistHeatmapSection";
 
 // Mock data - this will be replaced with real API calls later
 const mockMetrics = [
