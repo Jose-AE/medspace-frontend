@@ -31,8 +31,14 @@ export default function ReviewModal({
     setLoading(true);
 
     try {
-      await ReviewService.reviewClinic(clinicId!, clinicRating, clinicComment);
-      await ReviewService.reviewLandlord(
+      await ReviewService.createReview(
+        "clinic",
+        clinicId!,
+        clinicRating,
+        clinicComment
+      );
+      await ReviewService.createReview(
+        "landlord",
         landlordId!,
         landlordRating,
         landlordComment

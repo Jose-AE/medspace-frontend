@@ -21,7 +21,7 @@ export default function ReviewModal({ tenantId, isOpen, onClose }: Props) {
     setLoading(true);
 
     try {
-      await ReviewService.reviewTenant(tenantId!, rating, comment);
+      await ReviewService.createReview("tenant", tenantId!, rating, comment);
       setComment("");
       setRating(0);
       onClose();

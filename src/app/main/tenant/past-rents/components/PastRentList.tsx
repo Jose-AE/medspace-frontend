@@ -24,10 +24,10 @@ export default function PastRentList({ pastRentRequests }: Props) {
     return (
       <div className="flex flex-col items-center justify-center gap-4 p-8">
         <p className="text-lg font-semibold">
-          You don&apos;t have any past tenants.
+          You don&apos;t have any past rents.
         </p>
         <p className="text-sm text-gray-500">
-          When a tenant finishes their rental period, you will see them here.
+          When a rental period is completed, you will see it here.
         </p>
       </div>
     );

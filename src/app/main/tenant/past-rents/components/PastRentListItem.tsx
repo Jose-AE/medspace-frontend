@@ -44,7 +44,7 @@ export default function PastRentListItem({
         </Link>
       </div>
       <div className="flex flex-col gap-2 md:flex-row md:items-center">
-        <Button variant="primary" onClick={() => onRate(1, clinicId)}>
+        <Button variant="primary" onClick={() => onRate(landlordId, clinicId)}>
           Rate
         </Button>
       </div>

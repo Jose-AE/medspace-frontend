@@ -56,7 +56,7 @@ export class ReviewService {
 
       return response.data.data || [];
     } catch (error) {
-      console.error("[ReviewService]: Get reviews by user ID error:", error);
+      console.error("[ReviewService]: Get reviews by  clinic ID error:", error);
       throw error;
     }
   }
