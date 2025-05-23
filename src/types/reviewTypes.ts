@@ -5,3 +5,5 @@ export interface Review {
   body: string;
   createdAt: Date;
 }
+
+export type ReviewType = "tenant" | "landlord" | "clinic";

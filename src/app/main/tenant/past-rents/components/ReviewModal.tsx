@@ -7,23 +7,48 @@ import React from "react";
 import toast from "react-hot-toast";
 
 interface Props {
-  tenantId: number | null;
+  clinicId: number | null;
+  landlordId: number | null;
   isOpen: boolean;
   onClose: () => void;
 }
 
-export default function ReviewModal({ tenantId, isOpen, onClose }: Props) {
+export default function ReviewModal({
+  clinicId,
+  landlordId,
+  isOpen,
+  onClose
+}: Props) {
   const [loading, setLoading] = React.useState(false);
-  const [rating, setRating] = React.useState(0);
-  const [comment, setComment] = React.useState("");
+
+  const [landlordRating, setLandlordRating] = React.useState(0);
+  const [clinicRating, setClinicRating] = React.useState(0);
+
+  const [clinicComment, setClinicComment] = React.useState("");
+  const [landlordComment, setLandlordComment] = React.useState("");
 
   async function handleRate() {
     setLoading(true);
 
     try {
-      await ReviewService.createReview("tenant", tenantId!, rating, comment);
-      setComment("");
-      setRating(0);
+      await ReviewService.createReview(
+        "clinic",
+        clinicId!,
+        clinicRating,
+        clinicComment
+      );
+      await ReviewService.createReview(
+        "landlord",
+        landlordId!,
+        landlordRating,
+        landlordComment
+      );
+
+      setLandlordRating(0);
+      setClinicRating(0);
+      setClinicComment("");
+      setLandlordComment("");
+
       onClose();
       toast.success("Review submitted successfully.");
     } catch (error) {
@@ -43,16 +68,34 @@ export default function ReviewModal({ tenantId, isOpen, onClose }: Props) {
       body={
         <div className="flex flex-col  ">
           <h2 className="text-xl font-bold mb-4 ">Submit Review</h2>
+
           <div className="flex flex-col gap-2 ">
-            <label htmlFor="star-rating">Tenant Rating</label>
-            <StarRatingInput onChange={setRating} />
+            <label htmlFor="star-rating">Landlord Rating</label>
+            <StarRatingInput onChange={setLandlordRating} />
           </div>
 
           <div className="">
             <label htmlFor="feedback">Additional Comments</label>
             <TextInput
-              value={comment}
-              onChange={(e) => setComment(e.target.value)}
+              value={landlordComment}
+              onChange={(e) => setLandlordComment(e.target.value)}
+              rows={4}
+              className="resize-none"
+              isTextArea
+              placeholder="Leave your feedback here..."
+            />
+          </div>
+
+          <div className="flex flex-col gap-2 mt-2 ">
+            <label htmlFor="star-rating">Clinic Rating</label>
+            <StarRatingInput onChange={setClinicRating} />
+          </div>
+
+          <div className="">
+            <label htmlFor="feedback">Additional Comments</label>
+            <TextInput
+              value={clinicComment}
+              onChange={(e) => setClinicComment(e.target.value)}
               rows={4}
               className="resize-none"
               isTextArea

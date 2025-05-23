@@ -11,6 +11,7 @@ import LocationSection from "./components/LocationSection";
 import ReviewsSection from "./components/ReviewsSection";
 import ReserveCard from "./components/ReserveCard";
 import { UserService } from "@/services/UserService";
+import { ReviewService } from "@/services/ReviewService";
 
 export default async function ClinicPage({
   params
@@ -27,10 +28,6 @@ export default async function ClinicPage({
     includePhotos: true
   });
 
-  console.log(clinicData);
-
-  console.log(clinicData?.landLordId);
-
   if (!clinicData) {
     return <div>Clinic not found</div>;
   }
@@ -39,7 +36,7 @@ export default async function ClinicPage({
     clinicData.landLordId
   );
 
-  console.log(userData);
+  const reviews = await ReviewService.getReviewsByClinicId(clinicData.id);
 
   return (
     <div className="max-w-6xl mx-auto font-sans">
@@ -82,24 +79,7 @@ export default async function ClinicPage({
             />
 
             {/* Reviews - Shared */}
-            <ReviewsSection
-              reviews={[
-                {
-                  rating: 5,
-                  body: "Great place!",
-                  createdAt: new Date(),
-                  userName: "John Doe",
-                  userPfpPath: ""
-                },
-                {
-                  rating: 1,
-                  body: "Great place!",
-                  createdAt: new Date(),
-                  userName: "John Doe",
-                  userPfpPath: ""
-                }
-              ]}
-            />
+            <ReviewsSection reviews={reviews} />
           </div>
 
           {/* Tenant-specific */}
