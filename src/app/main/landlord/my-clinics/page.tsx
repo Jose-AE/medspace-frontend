@@ -3,7 +3,7 @@ import Link from "next/link";
 import Button from "@/components/Button";
 import { MdAddBox } from "react-icons/md";
 import ClinicFetcher from "./components/ClinicFetcher";
-import ClinicsListSkeleton from "@/components/ListSuspenseSkeleton/ListSuspenseSkeleton";
+import ListSkeleton from "@/components/ListSuspenseSkeleton/ListSuspenseSkeleton";
 
 export default async function page() {
   return (
@@ -17,7 +17,7 @@ export default async function page() {
         </Link>
       </div>
 
-      <Suspense fallback={<ClinicsListSkeleton />}>
+      <Suspense fallback={<ListSkeleton />}>
         <ClinicFetcher />
       </Suspense>
     </div>

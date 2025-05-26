@@ -17,7 +17,7 @@ export const MOCK_CLINICS: Clinic[] = [
     addressCountry: "USA",
     addressLongitude: "-89.6500",
     addressLatitude: "39.7833",
-    landlordId: 101,
+    landLordId: 101,
     averageRating: 4.5,
     photos: [
       {
@@ -88,7 +88,7 @@ export const MOCK_CLINICS: Clinic[] = [
     addressCountry: "USA",
     addressLongitude: "-118.4000",
     addressLatitude: "34.0736",
-    landlordId: 102,
+    landLordId: 102,
     averageRating: 4.8,
     photos: [
       {
@@ -135,7 +135,7 @@ export const MOCK_CLINICS: Clinic[] = [
     addressCountry: "USA",
     addressLongitude: "-97.7431",
     addressLatitude: "30.2672",
-    landlordId: 103,
+    landLordId: 103,
     averageRating: 4.7,
     photos: [
       {
@@ -182,7 +182,7 @@ export const MOCK_CLINICS: Clinic[] = [
     addressCountry: "USA",
     addressLongitude: "-124.0649",
     addressLatitude: "44.6365",
-    landlordId: 104,
+    landLordId: 104,
     averageRating: 4.9,
     photos: [
       {
@@ -226,7 +226,7 @@ export const MOCK_CLINICS: Clinic[] = [
     addressCountry: "USA",
     addressLongitude: "-112.0740",
     addressLatitude: "33.4484",
-    landlordId: 105,
+    landLordId: 105,
     averageRating: 4.6,
     photos: [
       {

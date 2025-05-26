@@ -1,6 +1,7 @@
 import React from "react";
 import Avatar from "@/components/Avatar/Avatar";
 import { Review } from "@/types/reviewTypes";
+import { dateToString } from "@/lib/dateUtils";
 
 interface Props {
   reviews: Review[];
@@ -28,7 +29,7 @@ export default function ReviewsSection({ reviews }: Props) {
                   </div>
                 </div>
                 <p className="text-sm text-gray-500">
-                  {review.createdAt.toISOString().split("T")[0]}
+                  {dateToString(review.createdAt)}
                 </p>
               </div>
             </div>

@@ -19,20 +19,18 @@ export function formatDate(date: Date, options?: Intl.DateTimeFormatOptions) {
  * Converts a date to a string in the format YYYY-MM-DD.
  *
  * @param date - The date to convert.
- * @param options - Optional Intl.DateTimeFormatOptions to customize the output.
  * @returns A string representing the date in the format YYYY-MM-DD.
  *
  * @example
  * dateToString(new Date()); // returns "2023-10-05"
  */
-export function dateToString(date: Date, options?: Intl.DateTimeFormatOptions) {
-  const formatter = new Intl.DateTimeFormat("en-US", options);
-  const parts = formatter.formatToParts(date);
-  const partMap = Object.fromEntries(
-    parts.map(({ type, value }) => [type, value])
-  );
+export function dateToString(date: Date) {
+  date = new Date(date);
+  const year = date.getUTCFullYear();
+  const month = String(date.getUTCMonth() + 1).padStart(2, "0");
+  const day = String(date.getUTCDate()).padStart(2, "0");
 
-  return `${partMap.year}-${partMap.month}-${partMap.day}`;
+  return `${year}-${month}-${day}`;
 }
 
 /**

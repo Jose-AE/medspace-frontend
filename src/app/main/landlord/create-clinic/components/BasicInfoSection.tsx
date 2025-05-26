@@ -6,9 +6,13 @@ import {
 import TextInput from "@/components/TextInput";
 import SelectInput from "@/components/SelectInput/SelectInput";
 import { constToTitleCase } from "@/lib/textUtils";
+import MapInput from "../steps/../../../../../components/MapInput/MapInput";
 import toast from "react-hot-toast";
 import StepSectionBase, { StepSectionProps } from "./StepSectionBase";
 import ClinicEquipmentTag from "./ClinicEquipmentTag";
+import { useMapAddress } from "@/hooks/useMapAddress";
+import { Coordinates } from "@/hooks/useMapAddress";
+import { useEffect } from "react";
 
 export default function BasicInfoSection({
   onClickPrimary,
@@ -23,6 +27,16 @@ export default function BasicInfoSection({
     value: cat,
     name: constToTitleCase(cat)
   }));
+  const INITIAL_COORDS = {
+    latitude: 19.4326,
+    longitude: -99.1332
+  };
+  useEffect(() => {
+    setData("addressLatitude", INITIAL_COORDS.latitude);
+    setData("addressLongitude", INITIAL_COORDS.longitude);
+
+    setCoordsOnly(INITIAL_COORDS);
+  }, []);
 
   const DEFAULT_EQUIPMENT = "DEFAULT_SELECT";
   const equipmentsOptions = [
@@ -32,6 +46,30 @@ export default function BasicInfoSection({
       name: constToTitleCase(eq)
     }))
   ];
+  const {
+    coordinates,
+    address,
+    addressCity,
+    addressState,
+    addressZip,
+    addressCountry,
+    updateLocation: setCoordsOnly
+  } = useMapAddress(INITIAL_COORDS);
+  useEffect(() => {
+    if (address && address !== "Dirección no encontrada") {
+      setData("addressStreet", address);
+      setData("addressCity", addressCity);
+      setData("addressState", addressState);
+      setData("addressZip", addressZip);
+      setData("addressCountry", addressCountry);
+    }
+  }, [address]);
+
+  const updateLocation = (coords: Coordinates) => {
+    setData("addressLatitude", coords.latitude);
+    setData("addressLongitude", coords.longitude);
+    setCoordsOnly(coords);
+  };
 
   const handleAddEquipment = (eq: ClinicEquipmentType | "DEFAULT_SELECT") => {
     if (eq != DEFAULT_EQUIPMENT && !data.equipments?.includes(eq)) {
@@ -59,6 +97,19 @@ export default function BasicInfoSection({
       setError("size", "Size must be greater than 0");
       isValid = false;
     }
+
+    if (!data.addressStreet?.trim()) {
+      setError("addressStreet", "Address could not be determined");
+      isValid = false;
+    }
+    if (!data.addressZip?.trim()) {
+      setError("addressZip", "ZIP Code cannot be empty");
+      isValid = false;
+    } else if (!/^\d{5}$/.test(data.addressZip)) {
+      setError("addressZip", "ZIP Code must be exactly 5 digits");
+      isValid = false;
+    }
+    
     return isValid;
   };
 
@@ -114,7 +165,39 @@ export default function BasicInfoSection({
               isInvalid={!!errors.description}
             />
           </div>
-          <div className="flex-1">Map here</div>
+          <div className="flex-1 flex flex-col gap-4">
+            <div className="w-full h-[250px]">
+              <MapInput
+                onLocationChange={updateLocation}
+                className="w-full h-full rounded-lg "
+              />
+            </div>
+            <div className="flex gap-4">
+            <TextInput
+                  label="Address"
+                  value={data.addressStreet ?? ""}
+                  onChange={(e) => {
+                    clearError("addressStreet");
+                    setData("addressStreet", e.target.value);
+                  }}
+                  invalidMessage={errors.addressStreet}
+                  isInvalid={!!errors.addressStreet}
+                />
+              <div className="w-1/3">
+              <TextInput
+                label="ZIP Code"
+                value={data.addressZip ?? ""}
+                onChange={(e) => {
+                  clearError("addressZip");
+                  setData("addressZip", e.target.value);
+                }}
+                invalidMessage={errors.addressZip}
+                isInvalid={!!errors.addressZip}
+              />
+                
+              </div>
+            </div>
+          </div>
         </div>
         <div className="flex gap-12">
           <div className="flex-1">

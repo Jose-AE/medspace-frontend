@@ -61,12 +61,13 @@ export interface Clinic {
   addressLongitude: string;
   addressLatitude: string;
 
-  landlordId: number;
+  landLordId: number;
   averageRating: number;
 
   photos?: ClinicPhoto[];
   equipments?: ClinicEquipment[];
   availabilities?: ClinicAvailability[];
+  occupiedDates?: Date[];
 }
 
 export interface ClinicPhoto {
@@ -109,6 +110,13 @@ export interface ClinicRegistrationData {
   propertyProof: File | null;
   availableFromDate: Date | null;
   availableToDate: Date | null;
+  addressLatitude: number;
+  addressLongitude: number;
+  addressStreet: string;
+  addressCity: string;
+  addressZip: string;
+  addressCountry: string;
+  addressState: string;
 }
 
 export interface ClinicDailyAvailabilityInput {

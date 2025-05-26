@@ -25,17 +25,21 @@ interface Props {
   className?: ClassValue;
 }
 
-const DEFAULT_COORDINATES = { longitude: -99.132390928256, latitude: 19.43121854346279 };
+const DEFAULT_COORDINATES = {
+  longitude: -99.132390928256,
+  latitude: 19.43121854346279
+};
 
 function MapInput({
   defaultCoordinates = DEFAULT_COORDINATES,
   onLocationChange,
   mapStyleURL,
   className,
-  defaultToUserLocation = true,
+  defaultToUserLocation = true
 }: Props) {
   const [marker, setMarker] = useState<Coordinates>(defaultCoordinates);
-  const [doneFethcingUserLocation, setDoneFethcingUserLocation] = useState(false);
+  const [doneFethcingUserLocation, setDoneFethcingUserLocation] =
+    useState(false);
 
   useEffect(() => {
     if (!defaultToUserLocation) {
@@ -63,18 +67,27 @@ function MapInput({
   };
 
   return (
-    <div className={cn("w-full h-[400px] rounded-lg overflow-hidden", className)}>
+    <div
+      className={cn("w-full h-[400px] rounded-lg overflow-hidden", className)}
+    >
       {doneFethcingUserLocation && (
         <Map
           initialViewState={{
             longitude: marker.longitude,
             latitude: marker.latitude,
-            zoom: 17,
+            zoom: 17
           }}
-          mapStyle={mapStyleURL || "https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json"}
+          mapStyle={
+            mapStyleURL ||
+            "https://api.maptiler.com/maps/streets-v2/style.json?key=a8to16zNmdlTpc9ywU87"
+          }
           onClick={handleMapClick}
         >
-          <Marker longitude={marker.longitude} latitude={marker.latitude} anchor="bottom">
+          <Marker
+            longitude={marker.longitude}
+            latitude={marker.latitude}
+            anchor="bottom"
+          >
             <FaMapMarkerAlt className="text-red-500" size={20} />
           </Marker>
         </Map>

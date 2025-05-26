@@ -6,13 +6,14 @@ import {
   RentRequestPreview,
   RentRequestStatusType
 } from "@/types/rentRequestTypes";
+import { dateToString } from "@/lib/dateUtils";
 
 export class RentRequestService {
   static BASE_URL = env.NEXT_PUBLIC_API_URL + "/rent-requests";
 
   static async fetchRentRequestsByLandlord(
     status: RentRequestStatusType
-  ): Promise<ApiResponse<RentRequestPreview[]>> {
+  ): Promise<RentRequestPreview[]> {
     try {
       const headers = await AuthService.getAuthHeaders();
 
@@ -24,7 +25,13 @@ export class RentRequestService {
           headers
         }
       );
-      return response.data;
+
+      response.data.data?.forEach((request) => {
+        request.startDate = new Date(request.startDate);
+        request.endDate = new Date(request.endDate);
+      });
+
+      return response.data.data || [];
     } catch (error) {
       console.error("[RentRequestService]: Fetch rent requests error:", error);
       throw error;
@@ -42,7 +49,7 @@ export class RentRequestService {
       const body = {
         clinicId,
         comments,
-        dates: dates.map((date) => date.toISOString().split("T")[0])
+        dates: dates.map((date) => dateToString(date))
       };
 
       await axios.post<ApiResponse<null>>(this.BASE_URL, body, {
@@ -54,7 +61,7 @@ export class RentRequestService {
     }
   }
 
-  static async rejectRentRequest(rentRequestId: string) {
+  static async rejectRentRequest(rentRequestId: number) {
     try {
       const headers = await AuthService.getAuthHeaders();
 
@@ -71,7 +78,7 @@ export class RentRequestService {
     }
   }
 
-  static async acceptRentRequest(rentRequestId: string) {
+  static async acceptRentRequest(rentRequestId: number) {
     try {
       const headers = await AuthService.getAuthHeaders();
 
