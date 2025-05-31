@@ -5,10 +5,10 @@ const COYOACAN_COORDS = { lat: 19.3444, lng: -99.1626 };
 const ALVARO_OBREGON_COORDS = { lat: 19.3556, lng: -99.1944 };
 const BENITO_JUAREZ_COORDS = { lat: 19.3907, lng: -99.1757 };
 const CUAUHTEMOC_COORDS = { lat: 19.4326, lng: -99.1332 };
-const MIGUEL_HIDALGO_COORDS = { lat: 19.4150, lng: -99.1886 };
+const MIGUEL_HIDALGO_COORDS = { lat: 19.415, lng: -99.1886 };
 
 // Helper function to generate random offset within a borough
-const getRandomOffset = (base: number, range: number = 0.02) => 
+const getRandomOffset = (base: number, range: number = 0.02) =>
   base + (Math.random() * range * 2 - range);
 
 export const MOCK_EXTERNAL_CLINICS: ExternalClinic[] = [
@@ -186,4 +186,4 @@ export const MOCK_EXTERNAL_CLINICS: ExternalClinic[] = [
     address: "Av. Presidente Masaryk 100, Miguel Hidalgo",
     source: "HealthMap"
   }
-]; 
+];

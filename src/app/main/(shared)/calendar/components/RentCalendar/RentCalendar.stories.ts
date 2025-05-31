@@ -8,17 +8,20 @@ const meta: Meta<typeof RentCalendar> = {
   args: {
     rentRequests: [
       {
+        landlordFullName: "Maria Lopez",
+        landlordId: 2,
+        landlordProfilePictureUrl: "/pfp_placeholder.png",
         id: 1,
         clinicDisplayName: "Consultorio medico moderno",
         clinicId: 1,
         clinicAddress: "Calle Falsa 123",
-        clinicMainPhotoPath: "/images/clinic1.jpg",
+        clinicMainPhotoPath: "/pfp_placeholder.png",
         startDate: new Date(new Date().setDate(new Date().getDate() + 1)),
         status: "ACCEPTED",
         comments: "Aceptado",
         tenantId: 1,
         tenantFullName: "Juan Perez",
-        tenantProfilePictureUrl: "/images/user1.jpg",
+        tenantProfilePictureUrl: "/pfp_placeholder.png",
         tenantSpecialty: "Cardiologia",
         endDate: new Date(new Date().setDate(new Date().getDate() + 2)),
         requestedDays: [

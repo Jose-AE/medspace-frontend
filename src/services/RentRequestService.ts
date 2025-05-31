@@ -17,19 +17,23 @@ export class RentRequestService {
   static async getSpecialistsDashboard(): Promise<RentRequestDashboardResponse> {
     try {
       const headers = await AuthService.getAuthHeaders();
-      
+
       // If no auth headers, user is not authenticated
       if (!headers.Authorization) {
         return {
           success: false,
-          message: 'User not authenticated',
+          message: "User not authenticated",
           data: []
         };
       }
 
-      const response = await safeApiCall<ApiResponse<RentRequestDashboardData[]>>(
-        () => axios.get(`${this.BASE_URL}/specialists-dashboard`, { headers })
-          .then(res => res.data),
+      const response = await safeApiCall<
+        ApiResponse<RentRequestDashboardData[]>
+      >(
+        () =>
+          axios
+            .get(`${this.BASE_URL}/specialists-dashboard`, { headers })
+            .then((res) => res.data),
         "RentRequestService: getSpecialistsDashboard"
       );
 
@@ -39,10 +43,10 @@ export class RentRequestService {
         data: response.data || []
       };
     } catch (error) {
-      console.error('Error in getSpecialistsDashboard:', error);
+      console.error("Error in getSpecialistsDashboard:", error);
       return {
         success: false,
-        message: error instanceof Error ? error.message : 'An error occurred',
+        message: error instanceof Error ? error.message : "An error occurred",
         data: []
       };
     }

@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import SectionCards from "./components/MetricsCard";
 import Button from "@/components/Button";
 import { HiOutlineDocumentArrowDown } from "react-icons/hi2";
@@ -46,16 +46,16 @@ const mockMetrics = [
 ];
 
 export default function MetricsPage() {
-  const [activeTab, setActiveTab] = useState('specialist');
+  const [activeTab, setActiveTab] = useState("specialist");
 
   const handleDownloadCSV = () => {
     // TODO: Implement CSV download
-    console.log('Downloading CSV...');
+    console.log("Downloading CSV...");
   };
 
   const handleDownloadPDF = () => {
     // Create a style element for print
-    const style = document.createElement('style');
+    const style = document.createElement("style");
     style.textContent = `
       @media print {
         body * {
@@ -88,29 +88,31 @@ export default function MetricsPage() {
     document.head.appendChild(style);
 
     // Find the active dashboard content
-    const activeContent = document.querySelector(`[data-dashboard-tab="${activeTab}"]`);
+    const activeContent = document.querySelector(
+      `[data-dashboard-tab="${activeTab}"]`
+    );
     if (!activeContent) {
-      console.error('Active dashboard content not found');
+      console.error("Active dashboard content not found");
       return;
     }
 
     // Add print class to the active content
-    activeContent.classList.add('print-content');
+    activeContent.classList.add("print-content");
 
     // Hide elements we don't want to print
-    const buttons = document.querySelectorAll('button');
-    buttons.forEach(button => button.classList.add('no-print'));
+    const buttons = document.querySelectorAll("button");
+    buttons.forEach((button) => button.classList.add("no-print"));
 
     // Set up cleanup handler
     const cleanup = () => {
       document.head.removeChild(style);
-      activeContent.classList.remove('print-content');
-      buttons.forEach(button => button.classList.remove('no-print'));
-      window.removeEventListener('afterprint', cleanup);
+      activeContent.classList.remove("print-content");
+      buttons.forEach((button) => button.classList.remove("no-print"));
+      window.removeEventListener("afterprint", cleanup);
     };
 
     // Add event listener for after print
-    window.addEventListener('afterprint', cleanup);
+    window.addEventListener("afterprint", cleanup);
 
     // Trigger print
     window.print();
@@ -122,12 +124,24 @@ export default function MetricsPage() {
 
   const renderDashboardContent = () => {
     switch (activeTab) {
-      case 'specialist':
-        return <div data-dashboard-tab="specialist"><SpecialistHeatmapSection /></div>;
-      case 'clinic':
-        return <div data-dashboard-tab="clinic"><ClinicDemandDashboardSection /></div>;
-      case 'disease':
-        return <div data-dashboard-tab="disease"><DiseasePrevalenceSection /></div>;
+      case "specialist":
+        return (
+          <div data-dashboard-tab="specialist">
+            <SpecialistHeatmapSection />
+          </div>
+        );
+      case "clinic":
+        return (
+          <div data-dashboard-tab="clinic">
+            <ClinicDemandDashboardSection />
+          </div>
+        );
+      case "disease":
+        return (
+          <div data-dashboard-tab="disease">
+            <DiseasePrevalenceSection />
+          </div>
+        );
       default:
         return null;
     }
@@ -149,17 +163,17 @@ export default function MetricsPage() {
 
         {/* Action Buttons - Always maintain their natural width */}
         <div className="flex gap-4 w-full sm:w-auto py-2">
-          <Button 
-            variant="outline" 
-            onClick={handleDownloadCSV} 
+          <Button
+            variant="outline"
+            onClick={handleDownloadCSV}
             className="flex-1 sm:flex-initial bg-white shadow-lg border-gray-200 py-2 px-4 text-sm text-gray-800"
             icon={<HiOutlineDocumentArrowDown />}
           >
             Download CSV
           </Button>
-          <Button 
-            variant="outline" 
-            onClick={handleDownloadPDF} 
+          <Button
+            variant="outline"
+            onClick={handleDownloadPDF}
             className="flex-1 sm:flex-initial bg-white shadow-lg border-gray-200 py-2 px-4 text-sm text-gray-800"
             icon={<HiOutlineDocumentText />}
           >
@@ -172,4 +186,4 @@ export default function MetricsPage() {
       {renderDashboardContent()}
     </main>
   );
-} 
+}

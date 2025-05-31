@@ -44,7 +44,8 @@ export interface RentRequestDashboardData {
   clinicLongitude: number;
 }
 
-export interface RentRequestDashboardResponse extends ApiResponse<RentRequestDashboardData[]> {
+export interface RentRequestDashboardResponse
+  extends ApiResponse<RentRequestDashboardData[]> {
   success: boolean;
   message: string;
   data: RentRequestDashboardData[];

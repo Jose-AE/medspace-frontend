@@ -1,6 +1,7 @@
 "use client";
 
 import { dateToString, formatDate, stringToDate } from "@/lib/dateUtils";
+import { WEEK_DAY_NUMBERS } from "@/types/clinicTypes";
 import { RentRequestPreview } from "@/types/rentRequestTypes";
 import { addDays, endOfWeek, startOfWeek } from "date-fns";
 import { useMemo, useState } from "react";
@@ -27,23 +28,13 @@ const RentCalendar = ({ rentRequests }: RentCalendarProps) => {
   const weekStart = startOfWeek(currentDate, { weekStartsOn: 1 });
   const weekEnd = endOfWeek(currentDate, { weekStartsOn: 1 });
 
-  const WEEKDAY_MAP = {
-    MONDAY: 0,
-    TUESDAY: 1,
-    WEDNESDAY: 2,
-    THURSDAY: 3,
-    FRIDAY: 4,
-    SATURDAY: 5,
-    SUNDAY: 6
-  };
-
   const calendarEvents = useMemo<CalendarEvent[]>(() => {
     return rentRequests.flatMap((request) => {
       return request.requestedDays
         .map((day) => {
           const weekDay = new Date(day).getDay();
           const availability = request.clinicAvailabilities.find(
-            (availability) => weekDay === WEEKDAY_MAP[availability.weekDay]
+            (availability) => weekDay === WEEK_DAY_NUMBERS[availability.weekDay]
           );
 
           if (!availability) {

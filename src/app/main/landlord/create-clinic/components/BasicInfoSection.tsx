@@ -4,7 +4,7 @@ import {
   ClinicEquipmentType
 } from "@/types/clinicTypes";
 import TextInput from "@/components/TextInput";
-import SelectInput from "@/components/SelectInput/SelectInput";
+import SelectInput from "@/components/SelectInput";
 import { constToTitleCase } from "@/lib/textUtils";
 import MapInput from "../steps/../../../../../components/MapInput/MapInput";
 import toast from "react-hot-toast";
@@ -21,6 +21,11 @@ import { PiTestTubeBold } from "react-icons/pi";
 import { RiSurgicalMaskLine } from "react-icons/ri";
 import { MdOutlineLocalPharmacy, MdWheelchairPickup } from "react-icons/md";
 
+const INITIAL_COORDS = {
+  latitude: 19.4326,
+  longitude: -99.1332
+} as const;
+
 export default function BasicInfoSection({
   onClickPrimary,
   onClickSecondary,
@@ -34,16 +39,22 @@ export default function BasicInfoSection({
     value: cat,
     name: constToTitleCase(cat)
   }));
-  const INITIAL_COORDS = {
-    latitude: 19.4326,
-    longitude: -99.1332
-  };
+
+  const {
+    address,
+    addressCity,
+    addressState,
+    addressZip,
+    addressCountry,
+    updateLocation: setCoordsOnly
+  } = useMapAddress(INITIAL_COORDS);
+
   useEffect(() => {
     setData("addressLatitude", INITIAL_COORDS.latitude);
     setData("addressLongitude", INITIAL_COORDS.longitude);
 
     setCoordsOnly(INITIAL_COORDS);
-  }, []);
+  }, [setData, setCoordsOnly]);
 
   const DEFAULT_EQUIPMENT = "DEFAULT_SELECT";
   const equipmentsOptions = [
@@ -53,15 +64,7 @@ export default function BasicInfoSection({
       name: constToTitleCase(eq)
     }))
   ];
-  const {
-    coordinates,
-    address,
-    addressCity,
-    addressState,
-    addressZip,
-    addressCountry,
-    updateLocation: setCoordsOnly
-  } = useMapAddress(INITIAL_COORDS);
+
   useEffect(() => {
     if (address && address !== "Dirección no encontrada") {
       setData("addressStreet", address);
@@ -70,7 +73,7 @@ export default function BasicInfoSection({
       setData("addressZip", addressZip);
       setData("addressCountry", addressCountry);
     }
-  }, [address]);
+  }, [address, addressCity, addressState, addressZip, addressCountry, setData]);
 
   const updateLocation = (coords: Coordinates) => {
     setData("addressLatitude", coords.latitude);

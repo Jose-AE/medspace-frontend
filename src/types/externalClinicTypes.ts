@@ -16,7 +16,8 @@ export const EXTERNAL_CLINIC_SPECIALTIES = [
   "Dermatology"
 ] as const;
 
-export type ExternalClinicSpecialty = (typeof EXTERNAL_CLINIC_SPECIALTIES)[number];
+export type ExternalClinicSpecialty =
+  (typeof EXTERNAL_CLINIC_SPECIALTIES)[number];
 
 export interface BoroughCenter {
   lat: number;
@@ -43,4 +44,4 @@ export interface ExternalClinicFilters {
   maxLat?: number;
   minLng?: number;
   maxLng?: number;
-} 
+}

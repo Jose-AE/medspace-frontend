@@ -13,8 +13,8 @@ const meta: Meta<typeof FileInput> = {
       }
     },
     accept: "application/pdf",
-    placeholder: "Select a file",
-  },
+    placeholder: "Select a file"
+  }
 };
 
 export default meta;

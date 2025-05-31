@@ -9,22 +9,22 @@ const meta: Meta<typeof MultistepFormNavItem> = {
     stepNumber: 1,
     label: "Basic Info",
     fill: true,
-    arrow: true,
+    arrow: true
   },
   argTypes: {
     stepNumber: {
-      control: { type: "number" },
+      control: { type: "number" }
     },
     label: {
-      control: { type: "text" },
+      control: { type: "text" }
     },
     fill: {
-      control: { type: "boolean" },
+      control: { type: "boolean" }
     },
     arrow: {
-      control: { type: "boolean" },
-    },
-  },
+      control: { type: "boolean" }
+    }
+  }
 };
 
 export default meta;
