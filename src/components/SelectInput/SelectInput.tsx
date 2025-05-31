@@ -1,5 +1,7 @@
 import { cn } from "@/lib/utils";
-import React, { SelectHTMLAttributes } from "react";
+import React, { ReactNode, SelectHTMLAttributes } from "react";
+import Tooltip from "../Tooltip";
+import { MdInfoOutline } from "react-icons/md";
 
 interface Props extends SelectHTMLAttributes<HTMLSelectElement> {
   placeholder?: string;
@@ -7,6 +9,7 @@ interface Props extends SelectHTMLAttributes<HTMLSelectElement> {
   isInvalid?: boolean;
   invalidMessage?: string;
   label?: string;
+  labelTooltip?: ReactNode; // Optional tooltip in label
 }
 
 function SelectInput({
@@ -16,17 +19,23 @@ function SelectInput({
   invalidMessage,
   values,
   label,
+  labelTooltip,
   ...props
 }: Props) {
   return (
     <div className={cn("w-full", className)}>
       <label
         className={cn(
-          "mt-4 block text-sm font-medium text-gray-800",
+          "mt-4 flex justify-between items-center text-sm font-medium text-gray-800",
           !label && "hidden"
         )}
       >
         {label}
+        {labelTooltip && (
+          <Tooltip body={labelTooltip}>
+            <MdInfoOutline className="ml-2" />
+          </Tooltip>
+        )}
       </label>
 
       <select

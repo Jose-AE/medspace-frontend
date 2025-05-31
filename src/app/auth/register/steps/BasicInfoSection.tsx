@@ -1,4 +1,4 @@
-import SelectInput from "@/components/SelectInput/SelectInput";
+import SelectInput from "@/components/SelectInput";
 import TextInput from "@/components/TextInput";
 import React from "react";
 import { CreateUserFormData } from "../page";
@@ -46,6 +46,23 @@ export default function BasicInfoSection({ formData, updateFormData }: Props) {
 
         <SelectInput
           label="User Type:"
+          labelTooltip={
+            <ul>
+              <li>
+                <strong>Landlord:</strong> Publish your clinics for tenants to
+                rent.
+              </li>
+              <li>
+                <strong>Tenant:</strong> Rent clinics from a landlord for
+                medical use.
+              </li>
+              <li>
+                {" "}
+                <strong>Analyst:</strong>Access dashboards displaying various
+                insights about the medical real estate market.{" "}
+              </li>
+            </ul>
+          }
           values={[
             { name: "Tenant", value: "TENANT" },
             { name: "Landlord", value: "LANDLORD" },

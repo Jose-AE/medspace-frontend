@@ -17,6 +17,12 @@ export class ClinicService {
   static async createClinic(
     data: ClinicRegistrationData
   ): Promise<ApiResponse<Clinic>> {
+    const MAX_STREET_LENGTH = 255;
+    const street =
+      data.addressStreet.length > MAX_STREET_LENGTH
+        ? data.addressStreet.slice(0, MAX_STREET_LENGTH)
+        : data.addressStreet;
+    const zip = data.addressZip?.trim() || "00000";
     const body = {
       displayName: data.displayName,
       category: data.category,
@@ -25,18 +31,17 @@ export class ClinicService {
       description: data.description,
       availableFromDate: data.availableFromDate,
       availableToDate: data.availableToDate,
-
-      // TODO: update address fields with the correct data
-      addressStreet: "Av hacker",
-      addressCity: "California",
-      addressState: "California",
-      addressZip: "123",
-      addressCountry: "USA",
-      addressLongitude: "134.234",
-      addressLatitude: "1234.23"
+      addressStreet: street,
+      addressCity: data.addressCity,
+      addressState: data.addressState,
+      addressZip: zip,
+      addressCountry: data.addressCountry,
+      addressLongitude: data.addressLongitude?.toString() ?? "",
+      addressLatitude: data.addressLatitude?.toString() ?? ""
     };
 
     const headers = await AuthService.getAuthHeaders();
+
     return safeApiCall(
       () =>
         axios
@@ -127,6 +132,22 @@ export class ClinicService {
       if (!response.data || !response.data.data) {
         return null;
       }
+
+      //Delete when endpoint is ready
+      const dates = [
+        //YYYY-MM-DD
+        "2025-05-02",
+        "2025-05-03",
+        "2025-05-04",
+        "2025-05-05",
+        "2025-05-06"
+      ];
+
+      const formattedDates = dates.map((date) => {
+        return new Date(date);
+      });
+      response.data.data.occupiedDates = formattedDates;
+      ///////
 
       return response.data.data;
     } catch (error) {

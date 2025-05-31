@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function useForm<T extends Record<string, any>>(initialData: T) {
   const [formData, setFormData] = useState<T>(initialData);
   const [errors, setErrors] = useState<Record<keyof T, string>>(

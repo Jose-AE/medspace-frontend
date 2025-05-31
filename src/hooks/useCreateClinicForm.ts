@@ -7,6 +7,8 @@ import {
   WEEK_DAYS
 } from "@/types/clinicTypes";
 import { useRouter } from "next/navigation";
+import { AxiosError } from "axios";
+
 import { useForm } from "./useForm";
 import { ClinicService } from "@/services/ClinicService";
 import { ClinicPhotoService } from "@/services/ClinicPhotoService";
@@ -30,13 +32,20 @@ const defaultData: CreateClinicFormData = {
   maximumStayInDays: null,
   availabilities: WEEK_DAYS.map((day) => ({
     dayOfWeek: day,
-    fromTime: null,
-    toTime: null,
+    fromTime: "12:00",
+    toTime: "12:00",
     isActive: true
   })),
   propertyProof: null,
   availableFromDate: null,
-  availableToDate: null
+  availableToDate: null,
+  addressStreet: "",
+  addressCity: "",
+  addressState: "",
+  addressZip: "",
+  addressCountry: "",
+  addressLatitude: 0,
+  addressLongitude: 0
 };
 
 export function useCreateClinicForm() {
@@ -68,12 +77,16 @@ export function useCreateClinicForm() {
         uploadAvailabilities(formData.availabilities!, clinic.id)
       ]);
       toast.success("Clinic created successfully");
+      router.push("/main/landlord/my-clinics");
     } catch (error) {
       console.error("[Clinic]: Error creating clinic", error);
       toast.error("Could not create all resources. Please try again");
+      const axiosError = error as AxiosError;
+      console.error("CREATE CLINIC ERROR STATUS:", axiosError.response?.status);
+      console.error("CREATE CLINIC ERROR DATA:", axiosError.response?.data);
+      throw error;
     } finally {
       setIsSubmitting(false);
-      router.push("/main");
     }
   };
 

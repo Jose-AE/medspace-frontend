@@ -7,7 +7,6 @@ import BasicInfoSection from "./components/BasicInfoSection";
 import PhotosSection from "./components/PhotosSection";
 import RentDataSection from "./components/RentDataSection";
 import PropertyProof from "./components/PropertyProofSection";
-import { useState } from "react";
 
 export default function CreateClinicPage() {
   const {

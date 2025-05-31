@@ -10,6 +10,8 @@ import AvailabilitySection from "./components/AvailabilitySection";
 import LocationSection from "./components/LocationSection";
 import ReviewsSection from "./components/ReviewsSection";
 import ReserveCard from "./components/ReserveCard";
+import { UserService } from "@/services/UserService";
+import { ReviewService } from "@/services/ReviewService";
 
 export default async function ClinicPage({
   params
@@ -29,6 +31,12 @@ export default async function ClinicPage({
   if (!clinicData) {
     return <div>Clinic not found</div>;
   }
+
+  const userData = await UserService.fetchPublicUserProfile(
+    clinicData.landLordId
+  );
+
+  const reviews = await ReviewService.getReviewsByClinicId(clinicData.id);
 
   return (
     <div className="max-w-6xl mx-auto font-sans">
@@ -51,22 +59,7 @@ export default async function ClinicPage({
             className={`${userType === "TENANT" ? "w-full lg:w-8/12 pr-0 lg:pr-6" : "w-full pr-0"}`}
           >
             {/* Landlord Info - Shared */}
-            <LandlordInfoSection
-              landlordData={{
-                averageRating: 5,
-                createdAt: new Date(),
-                fullName: "Osdaddy",
-                id: 0,
-                reviews: [],
-                pfpPath: "",
-                bio: "s",
-                tenantSpecialty: {
-                  id: 1,
-                  name: "DENTAL"
-                },
-                userType: "LANDLORD"
-              }}
-            />
+            <LandlordInfoSection landlordData={userData} />
 
             {/* Description - Shared */}
             <DescriptionSection description={clinicData.description} />
@@ -86,24 +79,7 @@ export default async function ClinicPage({
             />
 
             {/* Reviews - Shared */}
-            <ReviewsSection
-              reviews={[
-                {
-                  rating: 5,
-                  body: "Great place!",
-                  createdAt: new Date(),
-                  userName: "John Doe",
-                  userPfpPath: ""
-                },
-                {
-                  rating: 1,
-                  body: "Great place!",
-                  createdAt: new Date(),
-                  userName: "John Doe",
-                  userPfpPath: ""
-                }
-              ]}
-            />
+            <ReviewsSection reviews={reviews} />
           </div>
 
           {/* Tenant-specific */}
@@ -115,6 +91,7 @@ export default async function ClinicPage({
               availibility={{
                 form: clinicData.availableFromDate,
                 to: clinicData.availableToDate,
+                occupiedDates: clinicData.occupiedDates,
                 weekdays:
                   clinicData.availabilities?.map(
                     (a) => WEEK_DAY_NUMBERS[a.weekDay]

@@ -7,20 +7,22 @@ import { getUserServerSide } from "../AuthGuard/AuthGuard";
 const navbarLinks = {
   tenant: [
     { name: "Clinics", href: "/main/tenant/clinics" },
-    { name: "Rent Requests", href: "/rent-requests" },
-    { name: "Rent Calendar", href: "/rent-calendar" },
+    { name: "Sent Requests", href: "/main/tenant/my-requests" },
+    { name: "Rent Calendar", href: "/main/calendar" },
+    { name: "Past Rents", href: "/main/tenant/past-rents" },
+
     { name: "Notifications", href: "/notifications" }
   ],
   landlord: [
     { name: "Metrics", href: "/metrics" },
     { name: "Rent Requests", href: "/main/landlord/rent-requests" },
     { name: "My Clinics", href: "/main/landlord/my-clinics" },
-    { name: "New Clinic", href: "/main/landlord/create-clinic" },
-    { name: "Past tenants", href: "/past-tenants" },
+    { name: "Rent Calendar", href: "/main/calendar" },
+    { name: "Past tenants", href: "/main/landlord/past-tenants" },
     { name: "Notifications", href: "/notifications" }
   ],
   analyst: [
-    { name: "Metrics", href: "/metrics" },
+    { name: "Metrics", href: "/main/analyst/metrics" },
     { name: "Notifications", href: "/notifications" }
   ],
   guest: [
