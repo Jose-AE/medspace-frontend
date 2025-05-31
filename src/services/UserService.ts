@@ -8,6 +8,7 @@ import {
 } from "@/types/userTypes";
 import { ApiResponse } from "@/types/serviceTypes";
 import { AuthService } from "./AuthService";
+import { logInfo } from "@/lib/logUtil";
 
 export class UserService {
   static BASE_URL = env.NEXT_PUBLIC_API_URL + "/users";
@@ -24,20 +25,38 @@ export class UserService {
   }
 
   static async fetchCurrentUserProfile(): Promise<User> {
+    logInfo("[UserService]: Starting fetchCurrentUserProfile");
     try {
       const headers = await AuthService.getAuthHeaders();
+      logInfo("[UserService]: Got auth headers for fetchCurrentUserProfile", {
+        hasHeaders: !!headers,
+        headerKeys: Object.keys(headers)
+      });
 
-      const response = await axios.get(this.BASE_URL + "/me", {
-        headers
+      const url = this.BASE_URL + "/me";
+      logInfo("[UserService]: Making API request to", { url });
+
+      const response = await axios.get(url, {
+        headers,
+        timeout: 10000 // 10 second timeout
+      });
+
+      logInfo("[UserService]: API response received", {
+        status: response.status,
+        hasData: !!response.data
       });
 
       const userData = response.data.data as User;
       userData.createdAt = new Date(userData.createdAt);
 
+      logInfo("[UserService]: fetchCurrentUserProfile completed successfully", {
+        userId: userData.id
+      });
+
       return userData;
     } catch (error) {
-      console.error("Error fetching user data", error);
-      throw error; // You can customize the error handling as needed
+      console.error("[UserService]: Error fetching user data", error);
+      throw error;
     }
   }
 

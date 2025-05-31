@@ -10,7 +10,10 @@ export const env = {
     process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
   NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID:
     process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-  NEXT_PUBLIC_FIREBASE_APP_ID: process.env.NEXT_PUBLIC_FIREBASE_APP_ID
+  NEXT_PUBLIC_FIREBASE_APP_ID: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+
+  NEXT_PUBLIC_DEBUG_MODE:
+    process.env.NEXT_PUBLIC_DEBUG_MODE === "true" ? true : false
 };
 
 for (const [key, value] of Object.entries(env)) {
