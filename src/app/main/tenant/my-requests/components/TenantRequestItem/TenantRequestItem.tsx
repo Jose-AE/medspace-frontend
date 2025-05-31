@@ -29,6 +29,7 @@ const TenantRequestItem: React.FC<TenantRequestItemProps> = ({
       setRequests((prev) => prev.filter((r) => r.id !== requestPreview.id));
       toast.success("Rent request canceled successfully.");
     } catch (error) {
+      console.error("Error canceling request:", error);
       toast.error("Something went wrong. Please try again.");
     } finally {
       setIsLoading(false);

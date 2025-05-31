@@ -1,5 +1,5 @@
 import FileInput from "@/components/FileInput";
-import SelectInput from "@/components/SelectInput/SelectInput";
+import SelectInput from "@/components/SelectInput";
 import TextInput from "@/components/TextInput";
 import React, { useState } from "react";
 import Avatar from "@/components/Avatar/Avatar";

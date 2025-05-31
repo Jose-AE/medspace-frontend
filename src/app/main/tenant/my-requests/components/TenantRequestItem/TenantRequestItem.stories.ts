@@ -6,26 +6,35 @@ const meta: Meta<typeof TenantRequestItem> = {
   component: TenantRequestItem,
   tags: ["autodocs"],
   args: {
-    officeName: "Downtown Clinic",
-    date: "April 15, 2025",
-    officePhoto: "https://via.placeholder.com/48", // Placeholder image
-    onClickCancel: () => alert("Request canceled"),
-  },
+    requestPreview: {
+      clinicAddress: "123 Main St, Springfield",
+      clinicDisplayName: "Springfield Medical Center",
+      clinicId: 1,
+      clinicMainPhotoPath: "/pfp_placeholder.png",
+
+      clinicAvailabilities: [],
+      comments: "Looking forward to your visit!",
+      id: 1,
+      requestedDays: [],
+      endDate: new Date(new Date().setDate(new Date().getDate() + 3)),
+      startDate: new Date(new Date().setDate(new Date().getDate() + 1)),
+      landlordFullName: "John Doe",
+      landlordId: 1,
+      landlordProfilePictureUrl: "/pfp_placeholder.png",
+      tenantFullName: "Jane Smith",
+      tenantId: 2,
+      tenantProfilePictureUrl: "/pfp_placeholder.png",
+      status: "PENDING",
+      tenantSpecialty: "General Practitioner"
+    },
+
+    setRequests: (requests) => {
+      console.log("Requests updated:", requests);
+    }
+  }
 };
 
 export default meta;
 type Story = StoryObj<typeof TenantRequestItem>;
 
 export const Default: Story = {};
-
-export const WithPhoto: Story = {
-  args: {
-    officePhoto: "https://via.placeholder.com/48",
-  },
-};
-
-export const WithoutPhoto: Story = {
-  args: {
-    officePhoto: undefined,
-  },
-};
