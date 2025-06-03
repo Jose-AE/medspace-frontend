@@ -63,6 +63,8 @@ const ClinicImageInput = ({
         />
         {image ? (
           <Image
+            width={1000}
+            height={1000}
             src={image ? URL.createObjectURL(image) : undefined}
             alt="Clinic"
             className="w-48 h-48 object-cover"
