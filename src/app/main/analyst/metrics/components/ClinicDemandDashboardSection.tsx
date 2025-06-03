@@ -1,9 +1,9 @@
-import SelectInput from "@/components/SelectInput";
 import Heatmap from "./MaplibreHeatmap";
+import SelectInput from "@/components/SelectInput";
 import { ExternalClinicService } from "@/services/ExternalClinicService";
 import {
   ExternalClinicSpecialty,
-  MexicoCityBorough,
+  MexicanState,
   BoroughCenter
 } from "@/types/externalClinicTypes";
 import { ChangeEvent, useEffect, useState } from "react";
@@ -15,40 +15,68 @@ interface HeatmapDataPoint {
 }
 
 export default function ClinicDemandDashboardSection() {
-  const [selectedBorough, setSelectedBorough] = useState<
-    MexicoCityBorough | ""
-  >("");
+  const [selectedBorough, setSelectedBorough] = useState<MexicanState | "">("");
   const [selectedSpecialty, setSelectedSpecialty] = useState<
     ExternalClinicSpecialty | ""
   >("");
   const [heatmapData, setHeatmapData] = useState<HeatmapDataPoint[]>([]);
   const [mapCenter, setMapCenter] = useState<BoroughCenter>({
-    lat: 19.4326,
-    lng: -99.1332,
-    zoom: 10
+    lat: 23.6345,
+    lng: -102.5528,
+    zoom: 5
   });
+  const [boroughs, setBoroughs] = useState<string[]>([]);
+  const [specialties, setSpecialties] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const clinicService = ExternalClinicService.getInstance();
 
   useEffect(() => {
-    const data = clinicService.getHeatmapData({
-      borough: selectedBorough || undefined,
-      specialty: selectedSpecialty || undefined
-    });
-    setHeatmapData(data);
+    const fetchData = async () => {
+      try {
+        setIsLoading(true);
+        const [boroughsData, specialtiesData] = await Promise.all([
+          clinicService.getBoroughs(),
+          clinicService.getSpecialties()
+        ]);
+        setBoroughs(boroughsData);
+        setSpecialties(specialtiesData);
+      } catch (error) {
+        console.error("Error fetching options:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-    // Update map center when borough changes
-    if (selectedBorough) {
-      setMapCenter(clinicService.getBoroughCenter(selectedBorough));
-    } else {
-      setMapCenter({ lat: 19.4326, lng: -99.1332, zoom: 10 });
-    }
+    fetchData();
+  }, [clinicService]);
+
+  useEffect(() => {
+    const fetchHeatmapData = async () => {
+      try {
+        const data = await clinicService.getHeatmapData({
+          borough: selectedBorough || undefined,
+          specialty: selectedSpecialty || undefined
+        });
+        setHeatmapData(data);
+
+        // Update map center when borough changes
+        if (selectedBorough) {
+          setMapCenter(clinicService.getBoroughCenter(selectedBorough));
+        } else {
+          setMapCenter({ lat: 23.6345, lng: -102.5528, zoom: 5 });
+        }
+      } catch (error) {
+        console.error("Error fetching heatmap data:", error);
+      }
+    };
+
+    fetchHeatmapData();
   }, [selectedBorough, selectedSpecialty, clinicService]);
 
-  // Convert the service data to your select options
   const boroughOptions = [
-    { name: "All Boroughs", value: "" },
-    ...clinicService.getBoroughs().map((borough) => ({
+    { name: "All States", value: "" },
+    ...boroughs.map((borough) => ({
       name: borough,
       value: borough
     }))
@@ -56,14 +84,14 @@ export default function ClinicDemandDashboardSection() {
 
   const specialtyOptions = [
     { name: "All Specialties", value: "" },
-    ...clinicService.getSpecialties().map((specialty) => ({
+    ...specialties.map((specialty) => ({
       name: specialty,
       value: specialty
     }))
   ];
 
   const handleBoroughChange = (e: ChangeEvent<HTMLSelectElement>) => {
-    setSelectedBorough(e.target.value as MexicoCityBorough | "");
+    setSelectedBorough(e.target.value as MexicanState | "");
   };
 
   const handleSpecialtyChange = (e: ChangeEvent<HTMLSelectElement>) => {
@@ -77,7 +105,7 @@ export default function ClinicDemandDashboardSection() {
           <h2 className="text-xl font-semibold mb-2">Clinic Demand by Area</h2>
           <p className="text-gray-600 mb-4">
             Heat map showing the distribution of clinic demand across Mexico
-            City boroughs.
+            City states.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 w-full lg:w-4/5 xl:w-2/3">
             <div className="w-full sm:w-1/2">
@@ -85,6 +113,7 @@ export default function ClinicDemandDashboardSection() {
                 values={boroughOptions}
                 defaultValue=""
                 onChange={handleBoroughChange}
+                disabled={isLoading}
               />
             </div>
             <div className="w-full sm:w-1/2">
@@ -92,6 +121,7 @@ export default function ClinicDemandDashboardSection() {
                 values={specialtyOptions}
                 defaultValue=""
                 onChange={handleSpecialtyChange}
+                disabled={isLoading}
               />
             </div>
           </div>
