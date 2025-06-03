@@ -3,7 +3,8 @@ import {
   Clinic,
   ClinicEquipmentType,
   ClinicRegistrationData,
-  ClinicPreview
+  ClinicPreview,
+  EditClinicData
 } from "@/types/clinicTypes";
 import { ApiResponse } from "@/types/serviceTypes";
 import { AuthService } from "./AuthService";
@@ -182,6 +183,31 @@ export class ClinicService {
       return response.data.data || [];
     } catch (error) {
       console.error("[ClinicService]: Get my clinics error:", error);
+      throw error;
+    }
+  }
+
+  static async updateClinicById(clinicId: number, data: EditClinicData) {
+    try {
+      const headers = await AuthService.getAuthHeaders();
+      await axios.put(`${this.BASE_URL}/${clinicId}`, data, { headers });
+    } catch (error) {
+      console.error("[ClinicService]: Update clinic error:", error);
+      throw error;
+    }
+  }
+
+  static async getClinicSuggestedPrice(clinicId: number) {
+    try {
+      //simulate delay
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      return clinicId + 100; // This should be replaced with actual logic to get suggested price
+
+      // const headers = await AuthService.getAuthHeaders();
+      // await axios.put(`${this.BASE_URL}/${clinicId}`, { headers });
+    } catch (error) {
+      console.error("[ClinicService]: Update clinic error:", error);
       throw error;
     }
   }

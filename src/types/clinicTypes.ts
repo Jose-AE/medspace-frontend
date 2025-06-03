@@ -139,3 +139,8 @@ export interface ClinicPreview
   > {
   mainPhotoPath: string;
 }
+
+export type EditClinicData = Pick<
+  Clinic,
+  "displayName" | "category" | "pricePerDay" | "maxStayDays" | "description"
+>;
