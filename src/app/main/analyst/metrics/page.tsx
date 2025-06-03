@@ -48,44 +48,50 @@ const mockMetrics = [
 export default function MetricsPage() {
   const [activeTab, setActiveTab] = useState("specialist");
 
-const handleDownloadCSV = () => {
-  const rows = [
-    ["Title", "Value", "Trend", "Trend Direction", "Footer Title", "Footer Description"],
-    ...mockMetrics.map(m => [
-      m.title,
-      m.value,
-      m.trend,
-      m.trendDirection,
-      m.footerTitle,
-      m.footerDescription
-    ])
-  ];
+  const handleDownloadCSV = () => {
+    const rows = [
+      [
+        "Title",
+        "Value",
+        "Trend",
+        "Trend Direction",
+        "Footer Title",
+        "Footer Description"
+      ],
+      ...mockMetrics.map((m) => [
+        m.title,
+        m.value,
+        m.trend,
+        m.trendDirection,
+        m.footerTitle,
+        m.footerDescription
+      ])
+    ];
 
-  const csvContent = rows
-    .map(row =>
-      row.map(value => {
-        const v = String(value);
-        if (v.includes(",") || v.includes('"') || v.includes("\n")) {
-          return `"${v.replace(/"/g, '""')}"`;
-        }
-        return v;
-      }).join(",")
-    ).join("\n");
+    const csvContent = rows
+      .map((row) =>
+        row
+          .map((value) => {
+            const v = String(value);
+            if (v.includes(",") || v.includes('"') || v.includes("\n")) {
+              return `"${v.replace(/"/g, '""')}"`;
+            }
+            return v;
+          })
+          .join(",")
+      )
+      .join("\n");
 
-  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-  const url = URL.createObjectURL(blob);
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
 
-  const link = document.createElement("a");
-  link.href = url;    
-  link.setAttribute("download", "metrics.csv");
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-};
-
-
-
-
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", "metrics.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   const handleDownloadPDF = () => {
     // Create a style element for print
