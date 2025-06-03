@@ -9,26 +9,26 @@ const navbarLinks = {
     { name: "Clinics", href: "/main/tenant/clinics" },
     { name: "Sent Requests", href: "/main/tenant/my-requests" },
     { name: "Rent Calendar", href: "/main/calendar" },
-    { name: "Past Rents", href: "/main/tenant/past-rents" },
+    { name: "Past Rents", href: "/main/tenant/past-rents" }
 
-    { name: "Notifications", href: "/notifications" }
+    // { name: "Notifications", href: "/notifications" }
   ],
   landlord: [
     { name: "Metrics", href: "/metrics" },
     { name: "Rent Requests", href: "/main/landlord/rent-requests" },
     { name: "My Clinics", href: "/main/landlord/my-clinics" },
     { name: "Rent Calendar", href: "/main/calendar" },
-    { name: "Past tenants", href: "/main/landlord/past-tenants" },
-    { name: "Notifications", href: "/notifications" }
+    { name: "Past tenants", href: "/main/landlord/past-tenants" }
+    // { name: "Notifications", href: "/notifications" }
   ],
   analyst: [
-    { name: "Metrics", href: "/main/analyst/metrics" },
-    { name: "Notifications", href: "/notifications" }
+    { name: "Metrics", href: "/main/analyst/metrics" }
+    // { name: "Notifications", href: "/notifications" }
   ],
   guest: [
-    { name: "Home", href: "/" },
-    { name: "About", href: "/about" },
-    { name: "Contact", href: "/contact" }
+    // { name: "Home", href: "/" },
+    // { name: "About", href: "/about" },
+    // { name: "Contact", href: "/contact" }
   ]
 };
 
