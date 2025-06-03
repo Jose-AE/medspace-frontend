@@ -10,16 +10,13 @@ const meta: Meta<typeof MapInput> = {
       latitude: 19.43121854346279,
       longitude: -99.132390928256
     },
-    mapStyleURL: "https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json",
-    defaultToUserLocation: true
+    mapStyleURL: "https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json"
   },
   argTypes: {
     defaultCoordinates: {
       control: "object"
     },
-    defaultToUserLocation: {
-      control: "boolean"
-    },
+
     mapStyleURL: {
       control: "text"
     },
@@ -45,11 +42,7 @@ export const CustomStyle: Story = {
   }
 };
 
-export const WithoutUserLocation: Story = {
-  args: {
-    defaultToUserLocation: false
-  }
-};
+export const WithoutUserLocation: Story = {};
 
 export const WithPrintOnChangeLocation: Story = {
   args: {

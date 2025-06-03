@@ -1,5 +1,5 @@
-import React from "react";
+import { redirect } from "next/navigation";
 
-export default function page() {
-  return <div>landlord page</div>;
+export default async function Page() {
+  redirect("/main/landlord/my-clinics");
 }

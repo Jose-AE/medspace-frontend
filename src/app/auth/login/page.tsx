@@ -24,6 +24,9 @@ export default function LoginPage() {
     try {
       await AuthService.signInWithEmailAndPassword(email, password);
 
+      //wait 1 seconds to allow the fb to initialize the user profile
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
       router.push("/main"); // Redirect to the home page after successful login
     } catch (error) {
       if (error instanceof FirebaseError) {
