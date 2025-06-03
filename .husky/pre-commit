@@ -1,0 +1,5 @@
+npm run test
+npm run lint
+npm run test-compile
+npx prettier --write .
+git add .

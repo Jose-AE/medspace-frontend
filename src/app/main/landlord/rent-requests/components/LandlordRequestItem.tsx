@@ -73,6 +73,7 @@ const LandlordRequestItem: React.FC<LandlordRequestItemProps> = ({
       setRequests((prev) => prev.filter((r) => r.id !== requestPreview.id));
       toast.success("Rent request rejected successfully.");
     } catch (error) {
+      console.error("Error rejecting request:", error);
       toast.error("Something went wrong. Please try again.");
     } finally {
       setIsLoading(false);
@@ -86,6 +87,7 @@ const LandlordRequestItem: React.FC<LandlordRequestItemProps> = ({
       setRequests((prev) => prev.filter((r) => r.id !== requestPreview.id));
       toast.success("Rent request accepted successfully.");
     } catch (error) {
+      console.error("Error accepting request:", error);
       toast.error("Something went wrong. Please try again.");
     } finally {
       setIsLoading(false);
@@ -192,7 +194,7 @@ const LandlordRequestItem: React.FC<LandlordRequestItemProps> = ({
           </div>
         }
       />
-      <div className="flex items-center justify-between p-4 bg-white shadow-sm rounded-lg w-full max-w-6xl mx-auto">
+      <div className="flex items-center justify-between p-4 bg-white shadow-sm rounded-lg w-full flex-1 mx-auto">
         <RequestDetails
           specialistName={requestPreview.tenantFullName}
           specialistPhoto={requestPreview.tenantProfilePictureUrl}

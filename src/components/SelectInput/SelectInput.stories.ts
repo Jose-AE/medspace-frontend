@@ -5,35 +5,35 @@ const meta: Meta<typeof SelectInput> = {
   title: "Components/SelectInput",
   component: SelectInput,
   parameters: {
-    layout: "centered",
+    layout: "centered"
   },
   tags: ["autodocs"],
   argTypes: {
     placeholder: {
       control: "text",
-      description: "Placeholder text displayed when no option is selected",
+      description: "Placeholder text displayed when no option is selected"
     },
     values: {
       control: "object",
-      description: "Array of options with name and value properties",
+      description: "Array of options with name and value properties"
     },
     isInvalid: {
       control: "boolean",
-      description: "Whether the input has an error state",
+      description: "Whether the input has an error state"
     },
     invalidMessage: {
       control: "text",
-      description: "Error message displayed when isInvalid is true",
+      description: "Error message displayed when isInvalid is true"
     },
     label: {
       control: "text",
-      description: "Label text for the select input",
+      description: "Label text for the select input"
     },
     className: {
       control: "text",
-      description: "Additional CSS classes",
-    },
-  },
+      description: "Additional CSS classes"
+    }
+  }
 };
 
 export default meta;
@@ -42,35 +42,35 @@ type Story = StoryObj<typeof SelectInput>;
 const defaultValues = [
   { name: "Option 1", value: "option1" },
   { name: "Option 2", value: "option2" },
-  { name: "Option 3", value: "option3" },
+  { name: "Option 3", value: "option3" }
 ];
 
 export const Default: Story = {
   args: {
-    values: defaultValues,
-  },
+    values: defaultValues
+  }
 };
 
 export const WithPlaceholder: Story = {
   args: {
     placeholder: "Select an option",
-    values: defaultValues,
-  },
+    values: defaultValues
+  }
 };
 
 export const WithLabel: Story = {
   args: {
     label: "Select an option",
-    values: defaultValues,
-  },
+    values: defaultValues
+  }
 };
 
 export const WithLabelAndPlaceholder: Story = {
   args: {
     label: "Select an option",
     placeholder: "Choose from the list",
-    values: defaultValues,
-  },
+    values: defaultValues
+  }
 };
 
 export const Invalid: Story = {
@@ -79,24 +79,24 @@ export const Invalid: Story = {
     placeholder: "Choose from the list",
     values: defaultValues,
     isInvalid: true,
-    invalidMessage: "Please select a valid option",
-  },
+    invalidMessage: "Please select a valid option"
+  }
 };
 
 export const Disabled: Story = {
   args: {
     label: "Select an option",
     values: defaultValues,
-    disabled: true,
-  },
+    disabled: true
+  }
 };
 
 export const Required: Story = {
   args: {
     label: "Select an option",
     values: defaultValues,
-    required: true,
-  },
+    required: true
+  }
 };
 
 export const WithManyOptions: Story = {
@@ -113,14 +113,14 @@ export const WithManyOptions: Story = {
       { name: "Japan", value: "jp" },
       { name: "China", value: "cn" },
       { name: "India", value: "in" },
-      { name: "Brazil", value: "br" },
-    ],
-  },
+      { name: "Brazil", value: "br" }
+    ]
+  }
 };
 
 export const WithCustomClassName: Story = {
   args: {
     values: defaultValues,
-    className: "bg-red-500 p-4 rounded-lg",
-  },
+    className: "bg-red-500 p-4 rounded-lg"
+  }
 };

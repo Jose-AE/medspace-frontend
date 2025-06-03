@@ -13,7 +13,17 @@ export default function RentRequestList({
   const [requests, setRequests] = useState(rentRequests);
 
   if (requests.length === 0) {
-    return <div>No rent requests available.</div>;
+    return (
+      <div className="flex flex-col items-center justify-center gap-4 p-8">
+        <p className="text-lg font-semibold">
+          You don&apos;t have any rent requests.
+        </p>
+        <p className="text-sm text-gray-500">
+          When a tenant requests to rent your property, you will see their
+          request here.
+        </p>
+      </div>
+    );
   }
 
   return (

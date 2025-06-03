@@ -6,29 +6,29 @@ const meta: Meta<typeof MapInput> = {
   component: MapInput,
   tags: ["autodocs"],
   args: {
-    defaultCoordinates: { latitude: 19.43121854346279, longitude: -99.132390928256 },
-    mapStyleURL: "https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json",
-    defaultToUserLocation: true,
+    defaultCoordinates: {
+      latitude: 19.43121854346279,
+      longitude: -99.132390928256
+    },
+    mapStyleURL: "https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json"
   },
   argTypes: {
     defaultCoordinates: {
-      control: "object",
+      control: "object"
     },
-    defaultToUserLocation: {
-      control: "boolean",
-    },
+
     mapStyleURL: {
-      control: "text",
+      control: "text"
     },
     onLocationChange: {
-      action: "locationChanged",
+      action: "locationChanged"
     },
     className: {
       table: {
-        disable: true,
-      },
-    },
-  },
+        disable: true
+      }
+    }
+  }
 };
 
 export default meta;
@@ -38,18 +38,14 @@ export const Default: Story = {};
 
 export const CustomStyle: Story = {
   args: {
-    mapStyleURL: "https://tiles.stadiamaps.com/styles/stamen_terrain.json",
-  },
+    mapStyleURL: "https://tiles.stadiamaps.com/styles/stamen_terrain.json"
+  }
 };
 
-export const WithoutUserLocation: Story = {
-  args: {
-    defaultToUserLocation: false,
-  },
-};
+export const WithoutUserLocation: Story = {};
 
 export const WithPrintOnChangeLocation: Story = {
   args: {
-    onLocationChange: (coords) => console.log("New location:", coords),
-  },
+    onLocationChange: (coords) => console.log("New location:", coords)
+  }
 };

@@ -9,8 +9,8 @@ const meta: Meta<typeof TextInput> = {
     isTextArea: { control: "boolean" },
     label: { control: "text" },
     invalidMessage: { control: "text" },
-    className: { control: "text" },
-  },
+    className: { control: "text" }
+  }
 };
 
 export default meta;
@@ -20,22 +20,22 @@ type Story = StoryObj<typeof TextInput>;
 export const Default: Story = {
   args: {
     label: "Default Input",
-    type: "text",
-  },
+    type: "text"
+  }
 };
 
 export const Password: Story = {
   args: {
     label: "Password",
-    type: "password",
-  },
+    type: "password"
+  }
 };
 
 export const TextArea: Story = {
   args: {
     label: "Text Area",
-    isTextArea: true,
-  },
+    isTextArea: true
+  }
 };
 
 export const InvalidInput: Story = {
@@ -43,6 +43,6 @@ export const InvalidInput: Story = {
     label: "Invalid Input",
     type: "text",
     isInvalid: true,
-    invalidMessage: "This field is required.",
-  },
+    invalidMessage: "This field is required."
+  }
 };

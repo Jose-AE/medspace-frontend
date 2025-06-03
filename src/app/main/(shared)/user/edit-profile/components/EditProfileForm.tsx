@@ -3,7 +3,7 @@ import { useRef, useState } from "react";
 import { Check } from "lucide-react";
 import Avatar from "@/components/Avatar/Avatar";
 import TextInput from "@/components/TextInput";
-import SelectInput from "@/components/SelectInput/SelectInput";
+import SelectInput from "@/components/SelectInput";
 import {
   CreateUserProfileData,
   EditUserProfileData,

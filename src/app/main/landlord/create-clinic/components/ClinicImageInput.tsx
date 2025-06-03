@@ -2,6 +2,7 @@
 import { cn } from "@/lib/utils";
 import { useRef } from "react";
 import { FaImage } from "react-icons/fa";
+import Image from "@/components/Image";
 
 type ClinicImageInputProps = {
   /** Image in base 64 (to be passed as state from parent component) */
@@ -61,7 +62,9 @@ const ClinicImageInput = ({
           ref={inputRef}
         />
         {image ? (
-          <img
+          <Image
+            width={1000}
+            height={1000}
             src={image ? URL.createObjectURL(image) : undefined}
             alt="Clinic"
             className="w-48 h-48 object-cover"

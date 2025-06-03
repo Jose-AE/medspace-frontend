@@ -41,7 +41,7 @@ export class ClinicService {
     };
 
     const headers = await AuthService.getAuthHeaders();
-    console.log("CREATE CLINIC body:", body);
+
     return safeApiCall(
       () =>
         axios

@@ -1,4 +1,4 @@
-import SelectInput from "@/components/SelectInput/SelectInput";
+import SelectInput from "@/components/SelectInput";
 import TextInput from "@/components/TextInput";
 import React from "react";
 import { CreateUserFormData } from "../page";

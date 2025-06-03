@@ -1,5 +1,7 @@
 "use client";
 
+import TimeSelectInput from "@/components/TimeSelectInput";
+
 type ClinicAvailabilityInputProps = {
   /** Day of the week */
   dayOfWeek: string;
@@ -62,12 +64,10 @@ const ClinicAvailabilityInput = ({
             >
               From:
             </label>
-            <input
+            <TimeSelectInput
+              value={fromTime}
+              onChange={onChangeFromTime}
               disabled={!isActive}
-              type="time"
-              id={`from-${dayOfWeek}`}
-              value={isActive && fromTime ? fromTime : ""}
-              onChange={(e) => onChangeFromTime(e.target.value)}
             />
           </div>
 
@@ -78,14 +78,10 @@ const ClinicAvailabilityInput = ({
             >
               To:
             </label>
-            <input
+            <TimeSelectInput
+              value={toTime}
+              onChange={onChangeToTime}
               disabled={!isActive}
-              type="time"
-              id={`to-${dayOfWeek}`}
-              value={isActive && toTime ? toTime : ""}
-              onChange={(e) => {
-                onChangeToTime(e.target.value);
-              }}
             />
           </div>
         </div>

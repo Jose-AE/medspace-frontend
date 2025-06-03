@@ -4,15 +4,26 @@ import {
   ClinicEquipmentType
 } from "@/types/clinicTypes";
 import TextInput from "@/components/TextInput";
-import SelectInput from "@/components/SelectInput/SelectInput";
+import SelectInput from "@/components/SelectInput";
 import { constToTitleCase } from "@/lib/textUtils";
-import MapInput from "../steps/../../../../../components/MapInput/MapInput";
+import MapInput, {
+  LocationData
+} from "../steps/../../../../../components/MapInput/MapInput";
 import toast from "react-hot-toast";
 import StepSectionBase, { StepSectionProps } from "./StepSectionBase";
 import ClinicEquipmentTag from "./ClinicEquipmentTag";
-import { useMapAddress } from "@/hooks/useMapAddress";
-import { Coordinates } from "@/hooks/useMapAddress";
-import { useEffect } from "react";
+import { IconType } from "react-icons";
+import { LiaXRaySolid } from "react-icons/lia";
+import { TbLineScan, TbUserScan } from "react-icons/tb";
+import { LuScanFace } from "react-icons/lu";
+import { PiTestTubeBold } from "react-icons/pi";
+import { RiSurgicalMaskLine } from "react-icons/ri";
+import { MdOutlineLocalPharmacy, MdWheelchairPickup } from "react-icons/md";
+
+const DEFAULT_COORDINATES = {
+  longitude: -99.132390928256,
+  latitude: 19.43121854346279
+};
 
 export default function BasicInfoSection({
   onClickPrimary,
@@ -27,17 +38,6 @@ export default function BasicInfoSection({
     value: cat,
     name: constToTitleCase(cat)
   }));
-  const INITIAL_COORDS = {
-    latitude: 19.4326,
-    longitude: -99.1332
-  };
-  useEffect(() => {
-    setData("addressLatitude", INITIAL_COORDS.latitude);
-    setData("addressLongitude", INITIAL_COORDS.longitude);
-
-    setCoordsOnly(INITIAL_COORDS);
-  }, []);
-
   const DEFAULT_EQUIPMENT = "DEFAULT_SELECT";
   const equipmentsOptions = [
     { name: "Select", value: DEFAULT_EQUIPMENT },
@@ -46,30 +46,6 @@ export default function BasicInfoSection({
       name: constToTitleCase(eq)
     }))
   ];
-  const {
-    coordinates,
-    address,
-    addressCity,
-    addressState,
-    addressZip,
-    addressCountry,
-    updateLocation: setCoordsOnly
-  } = useMapAddress(INITIAL_COORDS);
-  useEffect(() => {
-    if (address && address !== "Dirección no encontrada") {
-      setData("addressStreet", address);
-      setData("addressCity", addressCity);
-      setData("addressState", addressState);
-      setData("addressZip", addressZip);
-      setData("addressCountry", addressCountry);
-    }
-  }, [address]);
-
-  const updateLocation = (coords: Coordinates) => {
-    setData("addressLatitude", coords.latitude);
-    setData("addressLongitude", coords.longitude);
-    setCoordsOnly(coords);
-  };
 
   const handleAddEquipment = (eq: ClinicEquipmentType | "DEFAULT_SELECT") => {
     if (eq != DEFAULT_EQUIPMENT && !data.equipments?.includes(eq)) {
@@ -98,18 +74,11 @@ export default function BasicInfoSection({
       isValid = false;
     }
 
-    if (!data.addressStreet?.trim()) {
-      setError("addressStreet", "Address could not be determined");
+    if (data.addressLatitude == null || data.addressLongitude == null) {
+      setError("addressCountry", "Please select a valid location on the map");
       isValid = false;
     }
-    if (!data.addressZip?.trim()) {
-      setError("addressZip", "ZIP Code cannot be empty");
-      isValid = false;
-    } else if (!/^\d{5}$/.test(data.addressZip)) {
-      setError("addressZip", "ZIP Code must be exactly 5 digits");
-      isValid = false;
-    }
-    
+
     return isValid;
   };
 
@@ -121,6 +90,27 @@ export default function BasicInfoSection({
     onClickPrimary();
   };
 
+  function onLocationChange(locationData: LocationData) {
+    setData("addressStreet", locationData.displayName);
+    setData("addressCity", locationData.city);
+    setData("addressState", locationData.state);
+    setData("addressZip", locationData.zipCode);
+    setData("addressCountry", locationData.country);
+    setData("addressLatitude", locationData.coordinates.latitude);
+    setData("addressLongitude", locationData.coordinates.longitude);
+  }
+
+  const iconMap: Record<ClinicEquipmentType, IconType> = {
+    X_RAY: LiaXRaySolid,
+    CT_SCAN: TbUserScan,
+    MRI: TbLineScan,
+    ULTRASOUND: LuScanFace,
+    LABORATORY: PiTestTubeBold,
+    SURGICAL_THEATER: RiSurgicalMaskLine,
+    PHARMACY: MdOutlineLocalPharmacy,
+    REHABILITATION: MdWheelchairPickup
+  };
+
   return (
     <StepSectionBase
       onClickPrimary={onNavigateNext}
@@ -130,7 +120,7 @@ export default function BasicInfoSection({
     >
       <div className="flex flex-col gap-6">
         <div className="flex gap-12">
-          <div className="flex-1">
+          <div className="flex-1 ">
             <TextInput
               label="Display Name"
               value={data.displayName}
@@ -142,7 +132,8 @@ export default function BasicInfoSection({
               isInvalid={!!errors.displayName}
             />
           </div>
-          <div className="flex-1">
+
+          <div className="flex-1 ">
             <SelectInput
               label="Clinic Category"
               values={categoryOptions}
@@ -151,9 +142,11 @@ export default function BasicInfoSection({
             />
           </div>
         </div>
-        <div className="flex gap-12">
+
+        <div className="flex gap-12 ">
           <div className="flex-1">
             <TextInput
+              className=" resize-none"
               isTextArea={true}
               label="Description"
               value={data.description}
@@ -165,40 +158,20 @@ export default function BasicInfoSection({
               isInvalid={!!errors.description}
             />
           </div>
-          <div className="flex-1 flex flex-col gap-4">
-            <div className="w-full h-[250px]">
-              <MapInput
-                onLocationChange={updateLocation}
-                className="w-full h-full rounded-lg "
-              />
-            </div>
-            <div className="flex gap-4">
-            <TextInput
-                  label="Address"
-                  value={data.addressStreet ?? ""}
-                  onChange={(e) => {
-                    clearError("addressStreet");
-                    setData("addressStreet", e.target.value);
-                  }}
-                  invalidMessage={errors.addressStreet}
-                  isInvalid={!!errors.addressStreet}
-                />
-              <div className="w-1/3">
-              <TextInput
-                label="ZIP Code"
-                value={data.addressZip ?? ""}
-                onChange={(e) => {
-                  clearError("addressZip");
-                  setData("addressZip", e.target.value);
-                }}
-                invalidMessage={errors.addressZip}
-                isInvalid={!!errors.addressZip}
-              />
-                
-              </div>
-            </div>
+          <div className="flex-1 flex flex-col ">
+            <label
+              className={`flex mt-4 mb-2 items-center justify-between text-sm font-medium text-gray-800 `}
+            >
+              Location
+            </label>
+            <MapInput
+              defaultCoordinates={DEFAULT_COORDINATES}
+              onLocationChange={onLocationChange}
+              className="w-full h-full rounded-lg "
+            />
           </div>
         </div>
+
         <div className="flex gap-12">
           <div className="flex-1">
             <SelectInput
@@ -229,6 +202,7 @@ export default function BasicInfoSection({
           {data.equipments?.map((eq, idx) => (
             <ClinicEquipmentTag
               key={idx}
+              icon={iconMap[eq as ClinicEquipmentType]}
               name={constToTitleCase(eq)}
               onDelete={() => {
                 handleDeleteEquipment(eq);

@@ -4,14 +4,55 @@ import axios from "axios";
 import { env } from "@/config/env";
 import {
   RentRequestPreview,
-  RentRequestStatusType
+  RentRequestStatusType,
+  RentRequestDashboardResponse,
+  RentRequestDashboardData
 } from "@/types/rentRequestTypes";
 import { dateToString } from "@/lib/dateUtils";
+import { safeApiCall } from "@/lib/apiUtils";
 
 export class RentRequestService {
   static BASE_URL = env.NEXT_PUBLIC_API_URL + "/rent-requests";
 
-  static async fetchRentRequestsByLandlord(
+  static async getSpecialistsDashboard(): Promise<RentRequestDashboardResponse> {
+    try {
+      const headers = await AuthService.getAuthHeaders();
+
+      // If no auth headers, user is not authenticated
+      if (!headers.Authorization) {
+        return {
+          success: false,
+          message: "User not authenticated",
+          data: []
+        };
+      }
+
+      const response = await safeApiCall<
+        ApiResponse<RentRequestDashboardData[]>
+      >(
+        () =>
+          axios
+            .get(`${this.BASE_URL}/specialists-dashboard`, { headers })
+            .then((res) => res.data),
+        "RentRequestService: getSpecialistsDashboard"
+      );
+
+      return {
+        success: response.success,
+        message: response.message,
+        data: response.data || []
+      };
+    } catch (error) {
+      console.error("Error in getSpecialistsDashboard:", error);
+      return {
+        success: false,
+        message: error instanceof Error ? error.message : "An error occurred",
+        data: []
+      };
+    }
+  }
+
+  static async fetchRentRequestsByUser(
     status: RentRequestStatusType
   ): Promise<RentRequestPreview[]> {
     try {
@@ -20,7 +61,7 @@ export class RentRequestService {
       const params = new URLSearchParams();
       params.append("status", status);
       const response = await axios.get<ApiResponse<RentRequestPreview[]>>(
-        this.BASE_URL + "/my-received-requests" + `?${params}`,
+        this.BASE_URL + "/my-requests" + `?${params}`,
         {
           headers
         }
@@ -91,6 +132,23 @@ export class RentRequestService {
       );
     } catch (error) {
       console.error("[RentRequestService]: Accept rent request error:", error);
+      throw error;
+    }
+  }
+
+  static async cancelRentRequest(rentRequestId: number) {
+    try {
+      const headers = await AuthService.getAuthHeaders();
+
+      await axios.put<ApiResponse<null>>(
+        this.BASE_URL + `/${rentRequestId}/cancel`,
+        {},
+        {
+          headers
+        }
+      );
+    } catch (error) {
+      console.error("[RentRequestService]: Cancel rent request error:", error);
       throw error;
     }
   }
