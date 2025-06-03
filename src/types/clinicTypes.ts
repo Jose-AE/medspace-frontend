@@ -64,6 +64,8 @@ export interface Clinic {
   landLordId: number;
   averageRating: number;
 
+  size: number;
+
   photos?: ClinicPhoto[];
   equipments?: ClinicEquipment[];
   availabilities?: ClinicAvailability[];

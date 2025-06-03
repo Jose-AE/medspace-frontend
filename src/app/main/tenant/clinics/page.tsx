@@ -25,7 +25,7 @@ export default function Page() {
     time: "12:00",
     equipment: [],
     date: undefined,
-    location: "CDMX",
+    location: "Mexico City",
     showSaved: false
   });
 

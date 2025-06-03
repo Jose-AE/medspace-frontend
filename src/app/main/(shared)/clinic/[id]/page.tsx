@@ -62,7 +62,10 @@ export default async function ClinicPage({
             <LandlordInfoSection landlordData={userData} />
 
             {/* Description - Shared */}
-            <DescriptionSection description={clinicData.description} />
+            <DescriptionSection
+              description={clinicData.description}
+              size={clinicData.size}
+            />
 
             {/* Equipment - Shared */}
             <EquipmentSection equipment={clinicData.equipments || []} />
@@ -72,6 +75,7 @@ export default async function ClinicPage({
 
             {/* Location - Shared */}
             <LocationSection
+              locationName={clinicData.addressStreet}
               coordinates={{
                 latitude: parseFloat(clinicData?.addressLatitude),
                 longitude: parseFloat(clinicData?.addressLongitude)

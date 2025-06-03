@@ -38,7 +38,8 @@ export class ClinicService {
       addressZip: zip,
       addressCountry: data.addressCountry,
       addressLongitude: data.addressLongitude?.toString() ?? "",
-      addressLatitude: data.addressLatitude?.toString() ?? ""
+      addressLatitude: data.addressLatitude?.toString() ?? "",
+      size: data.size
     };
 
     const headers = await AuthService.getAuthHeaders();
