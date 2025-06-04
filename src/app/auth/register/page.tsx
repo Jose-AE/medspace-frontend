@@ -95,9 +95,22 @@ export default function RegisterPage() {
         userData
       );
 
-      //wait for the user to be created before uploading the files
-      await new Promise((resolve) => setTimeout(resolve, 3000));
+      //try to get user profile for 10 seconds
+      // This is to ensure that the user is created and can create documents
+      for (let i = 0; i < 10; i++) {
+        // Check if the user is created by fetching the user profile
+        const token = await AuthService.getIdToken();
+        if (token) {
+          break; // Exit loop if user is found
+        }
+        console.warn(
+          `Attempt ${i + 1}: User profile not found yet, retrying...`
+        );
 
+        await new Promise((resolve) => setTimeout(resolve, 1000)); // Wait before retrying
+      }
+
+      //create documents
       const pfpPath = await StorageService.uploadImage(
         formData.pfpFile!,
         `user-pfps/${uuidv4()}-${formData.pfpFile?.name}`

@@ -24,8 +24,20 @@ export default function LoginPage() {
     try {
       await AuthService.signInWithEmailAndPassword(email, password);
 
-      //wait 1 seconds to allow the fb to initialize the user profile
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      //try to get user profile for 10 seconds
+      // This is to ensure that the user is logged in before redirecting
+      for (let i = 0; i < 10; i++) {
+        // Check if the user is logged in by fetching the user token
+        const token = await AuthService.getIdToken();
+        if (token) {
+          break; // Exit loop if user is found
+        }
+        console.warn(
+          `Attempt ${i + 1}: Logged in User profile not found yet, retrying...`
+        );
+
+        await new Promise((resolve) => setTimeout(resolve, 1000)); // Wait before retrying
+      }
 
       router.push("/main"); // Redirect to the home page after successful login
     } catch (error) {
