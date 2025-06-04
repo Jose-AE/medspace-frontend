@@ -6,6 +6,7 @@ import "maplibre-gl/dist/maplibre-gl.css";
 import { FaHouseChimneyMedical } from "react-icons/fa6";
 
 interface Props {
+  locationName: string;
   coordinates: {
     latitude: number;
     longitude: number;
@@ -17,10 +18,11 @@ const DEFAULT_COORDINATES = {
   latitude: 19.43121854346279
 };
 
-export default function LocationSection({ coordinates }: Props) {
+export default function LocationSection({ coordinates, locationName }: Props) {
   return (
     <div className="mb-6">
       <h2 className="text-xl font-bold mb-4">Location</h2>
+      <p className="text-gray-800 mb-2">{locationName}</p>
       <div className="h-64 bg-gray-200 mb-2 rounded-lg relative overflow-hidden">
         <Map
           initialViewState={{

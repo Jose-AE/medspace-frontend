@@ -43,7 +43,7 @@ interface Props {
 }
 
 export default function ClinicFilterBar({
-  locations = ["Ciudad de México", "Monterrey"],
+  locations = ["Mexico City", "Monterrey"],
   defaultLocation,
   defaultTime,
   defaultDate,
