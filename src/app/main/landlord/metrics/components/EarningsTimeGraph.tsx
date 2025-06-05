@@ -1,8 +1,3 @@
-// Dashboard.tsx
-
-import { PastTenant } from "@/components/__missing_section/PastTenants/PastTenantCard";
-import PastTenantList from "@/components/__missing_section/PastTenants/PastTenantList";
-
 import EarningsTimeGraph from "./EarningsTime";
 
 const GraphCard = ({ children }: { children: React.ReactNode }) => (
@@ -13,7 +8,6 @@ const GraphCard = ({ children }: { children: React.ReactNode }) => (
   </div>
 );
 
-const sampleEarningsData = [];
 export default function EarningsTimeVisualization() {
   return (
     <div className="grid-cols-1 md:grid-cols-3 gap-4">

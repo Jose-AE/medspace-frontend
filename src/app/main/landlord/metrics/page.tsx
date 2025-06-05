@@ -6,7 +6,6 @@ import EarningsTimeGraph from "./components/EarningsTime";
 import EarningsChart from "./components/PredictedEarnings";
 
 export default function MetricsPage() {
-  
   const earningsData = [
     { label: "Week 1", earnings: 10 },
     { label: "Week 2", earnings: 15 },
@@ -15,7 +14,7 @@ export default function MetricsPage() {
   ];
 
   return (
-    <div className="p-6 flex flex-col gap-8 items-center">
+    <div className="p-6 flex flex-row  items-center justify-center flex-wrap ">
       <EarningsTimeGraph data={earningsData} predictedPercentage={40} />
       <EarningsChart />
     </div>

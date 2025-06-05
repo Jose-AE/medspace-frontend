@@ -28,7 +28,7 @@ const EarningsTimeGraph: React.FC<EarningsTimeGraphProps> = ({
   predictedPercentage
 }) => {
   return (
-    <div className="p-2 w-[350px] flex flex-col items-center">
+    <div className="p-2 w-[350px] flex flex-col items-center border border-gray-300 rounded-xl  shadow-sm bg-white">
       <h2 className="text-lg font-semibold mb-4">Earnings Over Time</h2>
 
       {data.length === 0 ? (
@@ -77,5 +77,3 @@ const EarningsTimeGraph: React.FC<EarningsTimeGraphProps> = ({
 };
 
 export default EarningsTimeGraph;
-
-

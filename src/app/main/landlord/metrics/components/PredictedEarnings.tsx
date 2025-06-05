@@ -146,7 +146,6 @@ export default function EarningsChart({ data = defaultData }: Props) {
         <div className="text-right">
           <p className="text-sm text-gray-500 mb-1">Projected growth</p>
 
-
           {growthRate >= 0 && (
             <div className="flex items-center justify-end">
               <ArrowUpRight className="h-4 w-4 text-green-500 mr-1" />
