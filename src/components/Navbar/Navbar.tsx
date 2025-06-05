@@ -12,7 +12,7 @@ const navbarLinks = {
     { name: "Notifications", href: "/notifications" }
   ],
   landlord: [
-    { name: "Metrics", href: "/metrics" },
+    { name: "Metrics", href: "/main/landlord/metrics" },
     { name: "Rent Requests", href: "/main/landlord/rent-requests" },
     { name: "My Clinics", href: "/main/landlord/my-clinics" },
     { name: "Rent Calendar", href: "/main/calendar" },
