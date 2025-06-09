@@ -1,22 +1,43 @@
 // src/app/main/landlord/metrics/page.tsx
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import EarningsTimeGraph from "./components/EarningsTime";
 import EarningsChart from "./components/PredictedEarnings";
+import { EarningPrediction, PythonService } from "@/services/PythonService";
+
+const earningsData = [
+  { label: "Week 1", earnings: 10 },
+  { label: "Week 2", earnings: 15 },
+  { label: "Week 3", earnings: 20 },
+  { label: "Week 4", earnings: 25 }
+];
 
 export default function MetricsPage() {
-  const earningsData = [
-    { label: "Week 1", earnings: 10 },
-    { label: "Week 2", earnings: 15 },
-    { label: "Week 3", earnings: 20 },
-    { label: "Week 4", earnings: 25 }
-  ];
+  const [predictedEarnings, setPredictedEarnings] = React.useState<
+    EarningPrediction[]
+  >([]);
+
+  useEffect(() => {
+    async function fetchPredictedEarnings() {
+      try {
+        const data = await PythonService.getPredictedEarnings();
+        setPredictedEarnings(data);
+      } catch (error) {
+        console.error("Error fetching predicted earnings:", error);
+      }
+    }
+
+    fetchPredictedEarnings();
+  }, []);
 
   return (
     <div className="p-6 flex flex-row  items-center justify-center flex-wrap ">
       <EarningsTimeGraph data={earningsData} predictedPercentage={40} />
-      <EarningsChart />
+
+      <EarningsChart
+        data={predictedEarnings.length > 0 ? predictedEarnings : undefined}
+      />
     </div>
   );
 }
