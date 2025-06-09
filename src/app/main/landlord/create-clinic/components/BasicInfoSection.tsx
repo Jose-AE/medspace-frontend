@@ -91,6 +91,8 @@ export default function BasicInfoSection({
   };
 
   function onLocationChange(locationData: LocationData) {
+    console.log("Location Data:", locationData);
+
     setData("addressStreet", locationData.displayName);
     setData("addressCity", locationData.state || "NA");
     setData("addressState", locationData.state || "NA");
