@@ -12,7 +12,7 @@ export default function EarningsTimeVisualization() {
   return (
     <div className="grid-cols-1 md:grid-cols-3 gap-4">
       <GraphCard>
-        <EarningsTimeGraph data={[]} predictedPercentage={30} />
+        <EarningsTimeGraph />
       </GraphCard>
     </div>
   );
