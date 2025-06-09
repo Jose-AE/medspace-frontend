@@ -91,11 +91,13 @@ export default function BasicInfoSection({
   };
 
   function onLocationChange(locationData: LocationData) {
+    console.log("Location Data:", locationData);
+
     setData("addressStreet", locationData.displayName);
-    setData("addressCity", locationData.city);
-    setData("addressState", locationData.state);
-    setData("addressZip", locationData.zipCode);
-    setData("addressCountry", locationData.country);
+    setData("addressCity", locationData.state || "NA");
+    setData("addressState", locationData.state || "NA");
+    setData("addressZip", locationData.zipCode || "NA");
+    setData("addressCountry", locationData.country || "NA");
     setData("addressLatitude", locationData.coordinates.latitude);
     setData("addressLongitude", locationData.coordinates.longitude);
   }
