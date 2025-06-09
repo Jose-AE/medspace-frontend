@@ -20,4 +20,15 @@ export class PythonService {
       throw error;
     }
   }
+
+  static async getPredictedEarnings(): Promise<number[]> {
+    try {
+      const res = await axios.get(`${this.BASE_URL}/predict_earnings`)
+      return res.data.predicted_earnings
+    } catch (error) {
+      console.error("[PythonService]: Predicted Earnings Error:", error)
+      throw error
+    }
+  }  
+
 }
