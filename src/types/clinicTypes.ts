@@ -64,6 +64,8 @@ export interface Clinic {
   landLordId: number;
   averageRating: number;
 
+  size: number;
+
   photos?: ClinicPhoto[];
   equipments?: ClinicEquipment[];
   availabilities?: ClinicAvailability[];
@@ -139,3 +141,8 @@ export interface ClinicPreview
   > {
   mainPhotoPath: string;
 }
+
+export type EditClinicData = Pick<
+  Clinic,
+  "displayName" | "category" | "pricePerDay" | "maxStayDays" | "description"
+>;

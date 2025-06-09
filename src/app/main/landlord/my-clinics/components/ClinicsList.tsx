@@ -27,7 +27,7 @@ export default function ClinicsList({ clinics }: Props) {
   }
 
   function handleEdit(clinicId: number) {
-    router.push(`/main/landlord/my-clinics/${clinicId}/edit`);
+    router.push(`/main/landlord/edit-clinic/${clinicId}`);
   }
 
   async function handleShare(clinicId: number) {

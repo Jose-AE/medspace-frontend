@@ -25,13 +25,13 @@ export default function ListingsSection({ clinics, userFullName }: Props) {
             <Link
               key={i}
               href={"/main/clinic/" + clinic.id}
-              className="group cursor-pointer"
+              className="group cursor-pointer border border-gray-200 hover:border-gray-300 transition rounded-xl p-4 shadow-xs hover:shadow-md flex flex-col justify-between h-full"
             >
               <div className="relative aspect-[4/3] overflow-hidden rounded-xl mb-2">
                 <Image
                   src={clinic.mainPhotoPath}
                   alt={`Listing ${clinic.displayName}`}
-                  className="object-cover group-hover:scale-105 transition-transform duration-300"
+                  className="object-cover "
                   width={400}
                   height={300}
                 />
@@ -42,7 +42,9 @@ export default function ListingsSection({ clinics, userFullName }: Props) {
                   <div className="flex items-center">
                     <span className="text-yellow-500 mr-1">★</span>
 
-                    <span className="ml-1">{clinic.averageRating}</span>
+                    <span className="ml-1">
+                      {clinic.averageRating || "No ratings"}
+                    </span>
                   </div>
                 </div>
                 <p className="mt-1">

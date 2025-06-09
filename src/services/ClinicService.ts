@@ -3,7 +3,8 @@ import {
   Clinic,
   ClinicEquipmentType,
   ClinicRegistrationData,
-  ClinicPreview
+  ClinicPreview,
+  EditClinicData
 } from "@/types/clinicTypes";
 import { ApiResponse } from "@/types/serviceTypes";
 import { AuthService } from "./AuthService";
@@ -11,6 +12,10 @@ import axios from "axios";
 import { format } from "date-fns";
 import { safeApiCall } from "@/lib/apiUtils";
 
+export type CityOption = {
+  label: string;
+  value: string;
+};
 export class ClinicService {
   static BASE_URL = env.NEXT_PUBLIC_API_URL + "/clinics";
 
@@ -37,7 +42,8 @@ export class ClinicService {
       addressZip: zip,
       addressCountry: data.addressCountry,
       addressLongitude: data.addressLongitude?.toString() ?? "",
-      addressLatitude: data.addressLatitude?.toString() ?? ""
+      addressLatitude: data.addressLatitude?.toString() ?? "",
+      size: data.size
     };
 
     const headers = await AuthService.getAuthHeaders();
@@ -184,5 +190,95 @@ export class ClinicService {
       console.error("[ClinicService]: Get my clinics error:", error);
       throw error;
     }
+  }
+
+  static async updateClinicById(clinicId: number, data: EditClinicData) {
+    try {
+      const headers = await AuthService.getAuthHeaders();
+      await axios.put(`${this.BASE_URL}/${clinicId}`, data, { headers });
+    } catch (error) {
+      console.error("[ClinicService]: Update clinic error:", error);
+      throw error;
+    }
+  }
+
+  static async getClinicSuggestedPrice(clinicId: number) {
+    try {
+      //simulate delay
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      return clinicId + 100; // This should be replaced with actual logic to get suggested price
+
+      // const headers = await AuthService.getAuthHeaders();
+      // await axios.put(`${this.BASE_URL}/${clinicId}`, { headers });
+    } catch (error) {
+      console.error("[ClinicService]: Update clinic error:", error);
+      throw error;
+    }
+  }
+  static async getClinicsCount({
+    category,
+    city
+  }: {
+    category?: string;
+    city?: string;
+  }): Promise<number> {
+    let url = "";
+
+    if (category && city) {
+      url = `${this.BASE_URL}/filter?category=${category}&city=${city}`;
+    } else if (city) {
+      url = `${this.BASE_URL}/city-clinics/${city}`;
+    } else if (category) {
+      url = `${this.BASE_URL}/${category}/count`;
+    } else {
+      throw new Error("You must specify at least city or category");
+    }
+
+    const res = await fetch(url, { cache: "no-store" });
+
+    if (!res.ok) throw new Error("No se pudo obtener el conteo");
+
+    const json = await res.json();
+
+    // Manejar los diferentes formatos posibles
+    if (typeof json.data === "number") {
+      return json.data; // caso filter
+    } else if (json.data && typeof json.data.count === "number") {
+      return json.data.count; // caso city-clinics
+    } else if (typeof json.count === "number") {
+      return json.count; // caso category/count
+    } else {
+      throw new Error("Formato inesperado en la respuesta del backend");
+    }
+  }
+
+  static async getCitiesWithClinics(): Promise<CityOption[]> {
+    const res = await fetch(`${this.BASE_URL}/cities`, {
+      cache: "no-store"
+    });
+
+    if (!res.ok) throw new Error("Error fetching cities");
+
+    const json = await res.json();
+    if (json.data) {
+      return json.data.count ?? json.data;
+    }
+
+    return json.count ?? 0;
+  }
+  static async getTotalClinicsCount(): Promise<number> {
+    const url = `${this.BASE_URL}/clinics-count`;
+
+    const res = await fetch(url, { cache: "no-store" });
+
+    if (!res.ok)
+      throw new Error("No se pudo obtener el conteo total de clínicas");
+
+    const json = await res.json();
+
+    // Tu backend devuelve el count directamente en data, ej:
+    // { success: true, message: "...", data: 123 }
+    return json.data;
   }
 }
