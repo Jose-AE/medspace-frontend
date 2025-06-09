@@ -36,7 +36,6 @@ const defaultData: CreateClinicFormData = {
     toTime: "12:00",
     isActive: true
   })),
-  propertyProof: null,
   availableFromDate: null,
   availableToDate: null,
   addressStreet: "",

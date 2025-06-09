@@ -109,7 +109,6 @@ export interface ClinicRegistrationData {
     toTime: string | null;
     isActive: boolean;
   }[];
-  propertyProof: File | null;
   availableFromDate: Date | null;
   availableToDate: Date | null;
   addressLatitude: number;

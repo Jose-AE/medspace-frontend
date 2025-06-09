@@ -6,7 +6,6 @@ import { useCreateClinicForm } from "@/hooks/useCreateClinicForm";
 import BasicInfoSection from "./components/BasicInfoSection";
 import PhotosSection from "./components/PhotosSection";
 import RentDataSection from "./components/RentDataSection";
-import PropertyProof from "./components/PropertyProofSection";
 
 export default function CreateClinicPage() {
   const {
@@ -19,15 +18,13 @@ export default function CreateClinicPage() {
     submit,
     errors,
     setError,
-    clearError,
-    isSubmitting
+    clearError
   } = useCreateClinicForm();
 
   const steps = [
     { label: "Basic Info" },
     { label: "Photos" },
-    { label: "Rent Data" },
-    { label: "Property Proof" }
+    { label: "Rent Data" }
   ];
 
   const renderCurrentStepComponent = () => {
@@ -59,19 +56,6 @@ export default function CreateClinicPage() {
       case 3:
         return (
           <RentDataSection
-            onClickPrimary={goNext}
-            onClickSecondary={goBack}
-            data={formData}
-            setData={updateFormData}
-            errors={errors}
-            setError={setError}
-            clearError={clearError}
-          />
-        );
-      case 4:
-        return (
-          <PropertyProof
-            isSubmitting={isSubmitting}
             onClickPrimary={submit}
             onClickSecondary={goBack}
             data={formData}

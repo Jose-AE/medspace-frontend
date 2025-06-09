@@ -166,7 +166,5 @@ async function getLocationData(
     console.error("Error fetching location data:", error);
   }
 
-  console.log("Location data:", locationData);
-
   return locationData;
 }
