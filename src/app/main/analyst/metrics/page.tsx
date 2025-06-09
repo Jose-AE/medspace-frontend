@@ -9,8 +9,6 @@ import DiseasePrevalenceSection from "./components/DiseasePrevalenceSection";
 import ClinicDemandDashboardSection from "./components/ClinicDemandDashboardSection";
 import SpecialistHeatmapSection from "./components/SpecialistHeatmapSection";
 
-
-
 export default function MetricsPage() {
   const [activeTab, setActiveTab] = useState("specialist");
 
@@ -117,7 +115,7 @@ export default function MetricsPage() {
     <main className="container mx-auto px-4 py-8">
       {/* Metrics Overview */}
       <section className="mb-8">
-        <Filters  />
+        <Filters />
       </section>
 
       {/* Dashboard Navigation and Actions */}

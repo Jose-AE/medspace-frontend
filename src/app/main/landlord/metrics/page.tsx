@@ -6,13 +6,6 @@ import EarningsTimeGraph from "./components/EarningsTime";
 import EarningsChart from "./components/PredictedEarnings";
 import { EarningPrediction, PythonService } from "@/services/PythonService";
 
-const earningsData = [
-  { label: "Week 1", earnings: 10 },
-  { label: "Week 2", earnings: 15 },
-  { label: "Week 3", earnings: 20 },
-  { label: "Week 4", earnings: 25 }
-];
-
 export default function MetricsPage() {
   const [predictedEarnings, setPredictedEarnings] = React.useState<
     EarningPrediction[]
@@ -32,9 +25,8 @@ export default function MetricsPage() {
   }, []);
 
   return (
-    <div className="p-6 flex flex-row  items-center justify-center flex-wrap ">
-      <EarningsTimeGraph data={earningsData} predictedPercentage={40} />
-
+    <div className="p-6 flex flex-row items-center justify-center flex-wrap ">
+      <EarningsTimeGraph />
       <EarningsChart
         data={predictedEarnings.length > 0 ? predictedEarnings : undefined}
       />
