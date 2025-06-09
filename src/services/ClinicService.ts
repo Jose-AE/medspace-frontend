@@ -12,6 +12,10 @@ import axios from "axios";
 import { format } from "date-fns";
 import { safeApiCall } from "@/lib/apiUtils";
 
+export type CityOption = {
+  label: string;
+  value: string;
+};
 export class ClinicService {
   static BASE_URL = env.NEXT_PUBLIC_API_URL + "/clinics";
 
@@ -212,4 +216,70 @@ export class ClinicService {
       throw error;
     }
   }
+  static async getClinicsCount({
+    category,
+    city,
+  }: {
+    category?: string;
+    city?: string;
+  }): Promise<number> {
+    let url = "";
+  
+    if (category && city) {
+      url = `${this.BASE_URL}/filter?category=${category}&city=${city}`;
+    } else if (city) {
+      url = `${this.BASE_URL}/city-clinics/${city}`;
+    } else if (category) {
+      url = `${this.BASE_URL}/${category}/count`;
+    } else {
+      throw new Error("You must specify at least city or category");
+    }
+  
+    const res = await fetch(url, { cache: "no-store" });
+  
+    if (!res.ok) throw new Error("No se pudo obtener el conteo");
+  
+    const json = await res.json();
+  
+    // Manejar los diferentes formatos posibles
+    if (typeof json.data === "number") {
+      return json.data; // caso filter
+    } else if (json.data && typeof json.data.count === "number") {
+      return json.data.count; // caso city-clinics
+    } else if (typeof json.count === "number") {
+      return json.count; // caso category/count
+    } else {
+      throw new Error("Formato inesperado en la respuesta del backend");
+    }
+  }
+  
+  static async getCitiesWithClinics(): Promise<CityOption[]> {
+    const res = await fetch(`${this.BASE_URL}/cities`, {
+      cache: "no-store",
+    });
+
+    if (!res.ok) throw new Error("Error fetching cities");
+
+    const json = await res.json();
+    if (json.data) {
+      return json.data.count ?? json.data;
+    }
+    
+    return json.count ?? 0;
+    
+  }
+  static async getTotalClinicsCount(): Promise<number> {
+    const url = `${this.BASE_URL}/clinics-count`;
+  
+    const res = await fetch(url, { cache: "no-store" });
+  
+    if (!res.ok) throw new Error("No se pudo obtener el conteo total de clínicas");
+  
+    const json = await res.json();
+  
+    // Tu backend devuelve el count directamente en data, ej:
+    // { success: true, message: "...", data: 123 }
+    return json.data;
+  }
+  
 }

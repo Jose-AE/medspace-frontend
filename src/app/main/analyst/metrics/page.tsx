@@ -1,5 +1,5 @@
 "use client";
-import SectionCards from "./components/MetricsCard";
+import Filters from "./Filters";
 import Button from "@/components/Button";
 import { HiOutlineDocumentArrowDown } from "react-icons/hi2";
 import { HiOutlineDocumentText } from "react-icons/hi2";
@@ -9,41 +9,7 @@ import DiseasePrevalenceSection from "./components/DiseasePrevalenceSection";
 import ClinicDemandDashboardSection from "./components/ClinicDemandDashboardSection";
 import SpecialistHeatmapSection from "./components/SpecialistHeatmapSection";
 
-// Mock data - this will be replaced with real API calls later
-const mockMetrics = [
-  {
-    title: "Total Specialists",
-    value: "45",
-    trend: "+5",
-    trendDirection: "up" as const,
-    footerTitle: "From last month",
-    footerDescription: "5 new specialists joined"
-  },
-  {
-    title: "Total Clinics",
-    value: "12",
-    trend: "+2",
-    trendDirection: "up" as const,
-    footerTitle: "From last month",
-    footerDescription: "2 new clinics added"
-  },
-  {
-    title: "Total Patients",
-    value: "1,250",
-    trend: "+150",
-    trendDirection: "up" as const,
-    footerTitle: "From last month",
-    footerDescription: "150 new patients registered"
-  },
-  {
-    title: "Active Cases",
-    value: "320",
-    trend: "+25",
-    trendDirection: "up" as const,
-    footerTitle: "From last month",
-    footerDescription: "25 new active cases"
-  }
-];
+
 
 export default function MetricsPage() {
   const [activeTab, setActiveTab] = useState("specialist");
@@ -151,7 +117,7 @@ export default function MetricsPage() {
     <main className="container mx-auto px-4 py-8">
       {/* Metrics Overview */}
       <section className="mb-8">
-        <SectionCards data={mockMetrics} />
+        <Filters  />
       </section>
 
       {/* Dashboard Navigation and Actions */}
