@@ -11,44 +11,28 @@ import {
 } from "recharts";
 import { ArrowDownRight, ArrowUpRight } from "lucide-react";
 import { useMemo } from "react";
-
-interface DataPoint {
-  month: string;
-  actual: number | null;
-  predicted: number;
-}
+import { EarningPrediction } from "@/services/PythonService";
 
 interface Props {
-  data?: DataPoint[];
+  data?: EarningPrediction[];
 }
 
-const defaultData: DataPoint[] = [
-  { month: "Jan", actual: 5400, predicted: 6000 },
-  { month: "Feb", actual: 6200, predicted: 6800 },
-  { month: "Mar", actual: 7100, predicted: 7800 },
-  { month: "Apr", actual: 8300, predicted: 9000 },
-  { month: "May", actual: 9100, predicted: 9800 },
-  { month: "Jun", actual: 10200, predicted: 11000 },
-  { month: "Jul", actual: 11500, predicted: 12300 },
-  { month: "Aug", actual: 12700, predicted: 13500 },
-  { month: "Sep", actual: null, predicted: 14800 },
-  { month: "Oct", actual: null, predicted: 16200 },
-  { month: "Nov", actual: null, predicted: 17500 },
-  { month: "Dec", actual: null, predicted: 19000 }
+const defaultData: EarningPrediction[] = [
+  { date: "2025-06-10", predictedAmount: 95.5 }, // Tuesday
+  { date: "2025-06-11", predictedAmount: 102.3 }, // Wednesday
+  { date: "2025-06-12", predictedAmount: 98.7 }, // Thursday
+  { date: "2025-06-13", predictedAmount: 110.2 }, // Friday (typically higher)
+  { date: "2025-06-14", predictedAmount: 120.8 }, // Saturday (peak)
+  { date: "2025-06-15", predictedAmount: 115.4 }, // Sunday (still high)
+  { date: "2025-06-16", predictedAmount: 90.6 } // Monday (dip)
 ];
 
 export default function EarningsChart({ data = defaultData }: Props) {
   const { lastPredicted, growthRate } = useMemo(() => {
-    const lastActual = [...data].reverse().find((d) => d.actual !== null);
+    // Since we only have predicted data in the new format, we'll show 0% growth
     const lastPredicted = data[data.length - 1];
-    const growthRate =
-      lastPredicted && lastActual?.actual
-        ? Math.round(
-            ((lastPredicted.predicted - lastActual.actual) /
-              lastActual.actual) *
-              100
-          )
-        : 0;
+    const growthRate = 0; // No actual data to compare against
+
     return { lastPredicted, growthRate };
   }, [data]);
 
@@ -86,7 +70,7 @@ export default function EarningsChart({ data = defaultData }: Props) {
               </linearGradient>
             </defs>
             <XAxis
-              dataKey="month"
+              dataKey="date"
               tickLine={false}
               axisLine={false}
               stroke="#888"
@@ -113,17 +97,7 @@ export default function EarningsChart({ data = defaultData }: Props) {
             />
             <Area
               type="monotone"
-              dataKey="actual"
-              stroke="#4F46E5"
-              strokeWidth={2}
-              fill="url(#colorActual)"
-              activeDot={{ r: 5 }}
-              dot={{ r: 2 }}
-              name="Actual"
-            />
-            <Area
-              type="monotone"
-              dataKey="predicted"
+              dataKey="predictedAmount"
               stroke="#10B981"
               strokeWidth={2}
               strokeDasharray="5 5"
@@ -140,7 +114,7 @@ export default function EarningsChart({ data = defaultData }: Props) {
         <div>
           <p className="text-sm text-gray-500 mb-1">Year-end projection</p>
           <p className="text-2xl font-bold">
-            {formatCurrency(lastPredicted?.predicted ?? null)}
+            {formatCurrency(lastPredicted?.predictedAmount ?? null)}
           </p>
         </div>
         <div className="text-right">
