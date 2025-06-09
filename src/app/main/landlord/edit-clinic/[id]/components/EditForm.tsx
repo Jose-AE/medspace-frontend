@@ -5,6 +5,7 @@ import TextInput from "@/components/TextInput";
 import { useForm } from "@/hooks/useForm";
 import { constToTitleCase } from "@/lib/textUtils";
 import { ClinicService } from "@/services/ClinicService";
+import { PythonService } from "@/services/PythonService";
 import { Clinic, CLINIC_CATEGORIES, EditClinicData } from "@/types/clinicTypes";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -78,8 +79,10 @@ export default function EditForm({ clinicId, placeholders }: Props) {
     async function fetchSuggestedPrice() {
       try {
         setIsLoadingSuggestion(true);
-        const suggestion =
-          await ClinicService.getClinicSuggestedPrice(clinicId);
+        const suggestion = await PythonService.predictPrice(
+          placeholders.addressZip,
+          placeholders.size
+        );
         setSuggestedPrice(suggestion);
       } catch (error) {
         console.error("Error fetching price suggestion:", error);
@@ -90,7 +93,7 @@ export default function EditForm({ clinicId, placeholders }: Props) {
     }
 
     fetchSuggestedPrice();
-  }, [clinicId]);
+  }, [clinicId, placeholders.addressZip, placeholders.size]);
 
   return (
     <div className="flex flex-col gap-6 min-w-5xl  ">
@@ -134,7 +137,7 @@ export default function EditForm({ clinicId, placeholders }: Props) {
               ? "💡 Loading price suggestion..."
               : suggestedPrice
                 ? `💡 Suggested: $${suggestedPrice} (based on nearby clinics)`
-                : "💡 Recommended: $100-150 per day for most clinic types"}
+                : "💡 Insufficient clinic data in this area to estimate a recommended price."}
           </p>
         </div>
         <div className="flex-1">
