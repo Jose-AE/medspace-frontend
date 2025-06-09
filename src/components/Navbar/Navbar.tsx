@@ -26,9 +26,10 @@ const navbarLinks = {
     // { name: "Notifications", href: "/notifications" }
   ],
   guest: [
-    // { name: "Home", href: "/" },
-    // { name: "About", href: "/about" },
-    // { name: "Contact", href: "/contact" }
+    { name: "Home", href: "/" },
+    { name: "About", href: "/about" },
+    { name: "Contact", href: "/contact" },
+    { name: "Privacy Policy", href: "/privacy-policy" }
   ]
 };
 
