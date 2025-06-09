@@ -232,7 +232,7 @@ export class ClinicService {
     } else if (category) {
       url = `${this.BASE_URL}/${category}/count`;
     } else {
-      throw new Error("Debe indicar al menos ciudad o categoría");
+      throw new Error("You must specify at least city or category");
     }
   
     const res = await fetch(url, { cache: "no-store" });
