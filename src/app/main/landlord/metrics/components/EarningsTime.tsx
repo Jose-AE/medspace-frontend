@@ -12,64 +12,58 @@ import {
   Line,
   ResponsiveContainer
 } from "recharts";
+import { useEarnings } from "@/hooks/useEarnings";
 
-export interface EarningsDataPoint {
-  label: string;
-  earnings: number;
-}
+const EarningsTimeGraph: React.FC = () => {
+  const { data, isLoading, error, fetchWeeklyEarnings } = useEarnings();
 
-export interface EarningsTimeGraphProps {
-  data: EarningsDataPoint[];
-  predictedPercentage: number;
-}
+  if (error) {
+    return (
+      <div className="p-8 w-full max-w-4xl flex flex-col items-center border border-gray-300 rounded-2xl shadow-md bg-white">
+        <p className="text-red-500">Error loading earnings data</p>
+      </div>
+    );
+  }
 
-const EarningsTimeGraph: React.FC<EarningsTimeGraphProps> = ({
-  data,
-  predictedPercentage
-}) => {
   return (
-    <div className="p-2 w-[350px] flex flex-col items-center border border-gray-300 rounded-xl  shadow-sm bg-white">
-      <h2 className="text-lg font-semibold mb-4">Earnings Over Time</h2>
+    <div className="p-8 w-full max-w-4xl flex flex-col items-center border border-gray-300 rounded-2xl shadow-md bg-white">
+      <h2 className="text-2xl font-semibold mb-4">Income Over Time</h2>
 
-      {data.length === 0 ? (
+      {isLoading ? (
         <p className="text-muted-foreground text-sm text-center mt-10 mb-20">
-          No earnings data available.
+          Loading income data...
+        </p>
+      ) : !data?.length ? (
+        <p className="text-muted-foreground text-sm text-center mt-10 mb-20">
+          No income data available.
         </p>
       ) : (
         <>
-          <ResponsiveContainer width="105%" height={200} className="-ml-6">
-            <ComposedChart data={data}>
+          <ResponsiveContainer width="100%" height={350}>
+            <ComposedChart
+              data={data}
+              margin={{ top: 20, right: 40, left: 0, bottom: 20 }}
+            >
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="label" />
-              <YAxis domain={[0, 50]} />
+              <YAxis />
               <Tooltip />
-              <Bar dataKey="earnings" barSize={20} fill="#E5E7EB" />
+              <Bar dataKey="income" barSize={40} fill="#E5E7EB" />
               <Line
                 type="monotone"
-                dataKey="earnings"
+                dataKey="income"
                 stroke="#3B82F6"
                 strokeWidth={2}
                 dot
               />
             </ComposedChart>
           </ResponsiveContainer>
-
-          <div className="mt-4 text-sm text-left ml-6">
-            <span className="text-xl text-left font-bold">
-              {predictedPercentage}%
-            </span>{" "}
-            Your sales performance is {predictedPercentage}% better compared to
-            last month
-          </div>
         </>
       )}
 
       <div className="mt-4 flex gap-2">
-        <Button variant="blue" size="default">
-          Monthly
-        </Button>
-        <Button variant="blue" size="default">
-          Anual
+        <Button variant="blue" size="default" onClick={fetchWeeklyEarnings}>
+          Weekly
         </Button>
       </div>
     </div>

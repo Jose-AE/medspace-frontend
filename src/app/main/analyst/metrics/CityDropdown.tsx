@@ -3,7 +3,7 @@ import { ClinicService, CityOption } from "@/services/ClinicService";
 
 export function CityDropdown({
   onSelect,
-  selected,
+  selected
 }: {
   onSelect: (value: string) => void;
   selected?: string;
@@ -11,9 +11,7 @@ export function CityDropdown({
   const [cities, setCities] = useState<CityOption[]>([]);
 
   useEffect(() => {
-    ClinicService.getCitiesWithClinics()
-      .then(setCities)
-      .catch(console.error);
+    ClinicService.getCitiesWithClinics().then(setCities).catch(console.error);
   }, []);
 
   return (

@@ -218,13 +218,13 @@ export class ClinicService {
   }
   static async getClinicsCount({
     category,
-    city,
+    city
   }: {
     category?: string;
     city?: string;
   }): Promise<number> {
     let url = "";
-  
+
     if (category && city) {
       url = `${this.BASE_URL}/filter?category=${category}&city=${city}`;
     } else if (city) {
@@ -234,13 +234,13 @@ export class ClinicService {
     } else {
       throw new Error("You must specify at least city or category");
     }
-  
+
     const res = await fetch(url, { cache: "no-store" });
-  
+
     if (!res.ok) throw new Error("No se pudo obtener el conteo");
-  
+
     const json = await res.json();
-  
+
     // Manejar los diferentes formatos posibles
     if (typeof json.data === "number") {
       return json.data; // caso filter
@@ -252,10 +252,10 @@ export class ClinicService {
       throw new Error("Formato inesperado en la respuesta del backend");
     }
   }
-  
+
   static async getCitiesWithClinics(): Promise<CityOption[]> {
     const res = await fetch(`${this.BASE_URL}/cities`, {
-      cache: "no-store",
+      cache: "no-store"
     });
 
     if (!res.ok) throw new Error("Error fetching cities");
@@ -264,22 +264,21 @@ export class ClinicService {
     if (json.data) {
       return json.data.count ?? json.data;
     }
-    
+
     return json.count ?? 0;
-    
   }
   static async getTotalClinicsCount(): Promise<number> {
     const url = `${this.BASE_URL}/clinics-count`;
-  
+
     const res = await fetch(url, { cache: "no-store" });
-  
-    if (!res.ok) throw new Error("No se pudo obtener el conteo total de clínicas");
-  
+
+    if (!res.ok)
+      throw new Error("No se pudo obtener el conteo total de clínicas");
+
     const json = await res.json();
-  
+
     // Tu backend devuelve el count directamente en data, ej:
     // { success: true, message: "...", data: 123 }
     return json.data;
   }
-  
 }

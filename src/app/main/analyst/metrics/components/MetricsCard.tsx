@@ -26,7 +26,9 @@ export default function SectionCards({ data }: SectionCardsProps) {
           className="w-full bg-white shadow-md border-2 border-gray-300 rounded-xl p-4 relative"
         >
           <div className="mb-2 text-sm text-gray-500">{card.title}</div>
-          <div className="text-2xl font-semibold mb-6 text-gray-900">{card.value}</div>
+          <div className="text-2xl font-semibold mb-6 text-gray-900">
+            {card.value}
+          </div>
         </div>
       ))}
     </div>

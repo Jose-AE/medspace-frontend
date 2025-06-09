@@ -1,12 +1,14 @@
-import { useEffect, useState } from 'react';
-import { CityDropdown } from './CityDropdown';
-import { CategoryDropdown } from './CategoryDropdown';
-import { ClinicService } from '@/services/ClinicService';
-import SectionCards from './components/MetricsCard';
+import { useEffect, useState } from "react";
+import { CityDropdown } from "./CityDropdown";
+import { CategoryDropdown } from "./CategoryDropdown";
+import { ClinicService } from "@/services/ClinicService";
+import SectionCards from "./components/MetricsCard";
 
 export default function Filters() {
   const [selectedCity, setSelectedCity] = useState<string | undefined>();
-  const [selectedCategory, setSelectedCategory] = useState<string | undefined>();
+  const [selectedCategory, setSelectedCategory] = useState<
+    string | undefined
+  >();
   const [clinicCount, setClinicCount] = useState<number | null>(null);
 
   // Cargar conteo total al inicio
@@ -20,7 +22,10 @@ export default function Filters() {
 
   useEffect(() => {
     if (selectedCity || selectedCategory) {
-      ClinicService.getClinicsCount({ city: selectedCity, category: selectedCategory })
+      ClinicService.getClinicsCount({
+        city: selectedCity,
+        category: selectedCategory
+      })
         .then(setClinicCount)
         .catch(console.error);
     }
@@ -28,15 +33,18 @@ export default function Filters() {
 
   const cardsData = [
     {
-      title: 'Clinics that match your filters',
-      value: clinicCount !== null ? clinicCount.toString() : 'Cargando...'
+      title: "Clinics that match your filters",
+      value: clinicCount !== null ? clinicCount.toString() : "Cargando..."
     }
   ];
 
   return (
     <div>
       <CityDropdown selected={selectedCity} onSelect={setSelectedCity} />
-      <CategoryDropdown selected={selectedCategory} onSelect={setSelectedCategory} />
+      <CategoryDropdown
+        selected={selectedCategory}
+        onSelect={setSelectedCategory}
+      />
       <SectionCards data={cardsData} />
     </div>
   );
