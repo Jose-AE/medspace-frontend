@@ -28,7 +28,7 @@ export default function Filters() {
 
   const cardsData = [
     {
-      title: 'Clinics that match your filters ',
+      title: 'Clinics that match your filters',
       value: clinicCount !== null ? clinicCount.toString() : 'Cargando...'
     }
   ];
